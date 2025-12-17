@@ -81,12 +81,18 @@ args = parser.parse_args()
 
 
 
-if os.path.isabs(args.output):
-    output_folder = os.path.join(os.path.dirname(args.file), args.output)
-    if not os.path.exists: os.mkdir(output_folder)
-    os.chdir(output_folder)
+if not os.path.isabs(args.output):
+    output_folder = os.path.join(os.path.dirname(os.path.abspath(args.file)), args.output)
+    print(output_folder)
+else:
+    output_folder = args.output
 
-subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {os.path.abspath(args.file)} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > rosetta.pdb", shell=True)
+input_file = os.path.abspath(args.file)
+
+if not os.path.exists(output_folder): os.mkdir(output_folder)
+os.chdir(output_folder)
+
+subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/rosetta.pdb", shell=True)
 
 pdb = 'rosetta.pdb'
 
@@ -512,7 +518,7 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
             df_line.extend( [f'NaN' for i in range(REPLICS * 2)] )
             mut_combinations.append(df_line)
 
-    print(f'\nThere are {len(mut_combinations)} double mutations\n')
+    print(f'There are {len(mut_combinations)} double mutations\n')
 
     col_names = ["Name"]
     col_names.extend([f'Replica_{i+1}_Complex' for i in range(REPLICS)])
@@ -549,4 +555,4 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
 
     df3.sort_values("ddG_interface").to_csv("ddG_double_mut.csv", index=False)
 
-print('\nDONE =)')
+print('\nDONE 🐁')
