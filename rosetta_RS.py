@@ -57,7 +57,7 @@ parser.add_argument("--not_minimize",
                     action='store_true',
                     help='FastRelax Minimization of every structure is included by default. Use it if u dont need this (or u wanna make fast mut analysis)')
 
-parser.add_argument("-r", "--replics",
+parser.add_argument("--replics",
                     required=False,
                     default=5,
                     help='Max count of replics for FastRelax sampling. Default is 5')
