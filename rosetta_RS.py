@@ -32,11 +32,15 @@ parser.add_argument("-m", "--mode",
                     choices=['FR', 'FastRelax', 'RS', 'Residue_Scanning', 'DM', 'Double_Mut_Searching'],
                     help="Mode for a task. FastRelax - preparing input structure. Residue Scanning - calculate ddG for mutants. Double Mut Searching - experimental. Calculate ddG only for combinations of single muts agree with condition")
 
-parser.add_argument("-p", "--partners",
+parser.add_argument("-r", "--receptor",
                     required=True,
-                    default="HL_A",
-                    help='''String of partners in interaction. Ex: "HL_A" means H and L chains serve as a receptor and can be mutated. And a chain A is a ligand. 
-                    Energy of interaction will be calculated between H+L chains as a complex and a chain A''')
+                    default="HL",
+                    help='Receptor chains name. If receptor consists several chains dont separate them. Default is HL')
+
+parser.add_argument("-l", "--ligand",
+                    required=True,
+                    default="A",
+                    help='Ligand chains name. If ligand consists several chains dont separate them. Default is HL. ddG_interface will be calculated for interaction between receptor and ligan chains')
 
 parser.add_argument("--cpu", 
                     required=True,
@@ -51,7 +55,7 @@ parser.add_argument("-o", "--output",
 parser.add_argument("--not_minimize",
                     required=False,
                     action='store_true',
-                    help='FastRelax Minimization of every structure is included by default. Use it if u dont need this (or u wanna make fast muts analysis)')
+                    help='FastRelax Minimization of every structure is included by default. Use it if u dont need this (or u wanna make fast mut analysis)')
 
 parser.add_argument("-r", "--replics",
                     required=False,
@@ -97,8 +101,8 @@ RADIUS = args.radius # angstrom
 REPLICS = args.replics
 AA = 'ADEFGHIKLMNQRSTYVW' # excluded cysteine and proline
 
-receptor_chains = [ i for i in args.partners.split('_')[0] ]
-ligand_chains = [ i for i in args.partners.split('_')[-1] ]
+receptor_chains = args.receptor
+ligand_chains = args.ligand
 
 num_of_processes = args.cpu # count of cpus
 

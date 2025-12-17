@@ -8,5 +8,5 @@ dependencies:
   - conda-forge::numpy=2.1.0
   - pandas
   - anaconda::biopython=1.85
-  - conda.rosettacommons.org::pyrosetta
+  - https://levinthal:paradox@conda.rosettacommons.org::pyrosetta
   - python-blosc=1.11.3
