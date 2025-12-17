@@ -49,8 +49,8 @@ parser.add_argument("--cpu",
 
 parser.add_argument("-o", "--output",
                     required=False,
-                    default=f'{os.getcwd()}',
-                    help='Path to output files')
+                    default='results',
+                    help='Path to output files. Default: folder "results" will be created')
 
 parser.add_argument("--not_minimize",
                     required=False,
@@ -82,6 +82,7 @@ args = parser.parse_args()
 
 
 cur_dir = os.getcwd()
+if not os.path.exists: os.mkdir(args.output)
 os.chdir(args.output)
 
 input_pdb = os.path.join(cur_dir, args.file)
@@ -174,7 +175,7 @@ def interface_analyzer(pose, receptor_chains, ligand_chains, sfxn):
     return iam.get_interface_dG()
 
 def repack_and_minimize(pose, replica, mutation=False, 
-                        RADIUS=6, adjacent_aa_range=1, debug=debug, 
+                        RADIUS=RADIUS, adjacent_aa_range=1, debug=debug, 
                         receptor_chains=receptor_chains, ligand_chains=ligand_chains):
     
     if debug: print(f"Step repack_and_minimize: {pose.pdb_info().name()}")
@@ -452,7 +453,7 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
     for i in selected_positions:
         residue_selector = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
         neighbor_selector = pyrosetta.rosetta.core.select.residue_selector.NeighborhoodResidueSelector()
-        neighbor_selector.set_distance(RADIUS)
+        #neighbor_selector.set_distance(RADIUS)
 
         chain = i[0]
 
