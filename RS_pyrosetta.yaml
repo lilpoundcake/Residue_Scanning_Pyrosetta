@@ -1,0 +1,12 @@
+name: RS_pyrosetta
+channels:
+  - conda-forge
+  - anaconda
+  - https://levinthal:paradox@conda.rosettacommons.org
+dependencies:
+  - python=3.13.5
+  - conda-forge::numpy=2.1.0
+  - pandas
+  - anaconda::biopython=1.85
+  - conda.rosettacommons.org::pyrosetta
+  - python-blosc=1.11.3
