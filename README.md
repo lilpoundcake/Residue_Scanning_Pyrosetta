@@ -1,4 +1,4 @@
-# Residue_Scanning_Pyrosetta
+# Residue Scanning Pyrosetta
 
 Script for checking mutations in a protein-protein interface
 
@@ -95,5 +95,5 @@ The following files and folders will be generated in your specified output direc
 
 ## Citation
 
- Protocol inspired by an article **"Prediction of Protein Mutational Free Energy: Benchmark and Sampling Improvements Increase Classification Accuracy"** 
+ Protocol inspired by an article **"Prediction of Protein Mutational Free Energy: Benchmark and Sampling Improvements Increase Classification Accuracy"** <br></br>
  DOI: [10.3389/fbioe.2020.558247](https://www.frontiersin.org/journals/bioengineering-and-biotechnology/articles/10.3389/fbioe.2020.558247/full)
