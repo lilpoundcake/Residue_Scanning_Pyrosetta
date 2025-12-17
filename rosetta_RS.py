@@ -81,12 +81,12 @@ args = parser.parse_args()
 
 
 
-cur_dir = os.getcwd()
-if not os.path.exists: os.mkdir(args.output)
-os.chdir(args.output)
+if os.path.isabs(args.output):
+    output_folder = os.path.join(os.path.dirname(args.file), args.output)
+    if not os.path.exists: os.mkdir(output_folder)
+    os.chdir(output_folder)
 
-input_pdb = os.path.join(cur_dir, args.file)
-subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_pdb} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > rosetta.pdb", shell=True)
+subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {os.path.abspath(args.file)} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > rosetta.pdb", shell=True)
 
 pdb = 'rosetta.pdb'
 
@@ -94,6 +94,7 @@ pose = pyrosetta.pose_from_pdb(pdb)
 original_pose = pose.clone()
 
 sfxn_cartesian = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function("ref2015_cart")
+
 
 
 #---------- Defaults -----------
