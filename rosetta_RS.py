@@ -14,8 +14,8 @@ from itertools import repeat
 
 #micromamba install python-blosc
 
-from pyrosetta import * # type: ignore
-from pyrosetta.rosetta import * # type: ignore
+from pyrosetta import * 
+from pyrosetta.rosetta import * 
 
 pyrosetta.init('-use_input_sc -flip_HNQ -ex1 -ex2 -relax:cartesian -ignore_unrecognized_res -mute all ')
 
@@ -94,12 +94,7 @@ os.chdir(output_folder)
 
 subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/rosetta.pdb", shell=True)
 
-pdb = 'rosetta.pdb'
-
-pose = pyrosetta.pose_from_pdb(pdb)
-original_pose = pose.clone()
-
-sfxn_cartesian = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function("ref2015_cart")
+pdb = f'{output_folder}/rosetta.pdb'
 
 
 
@@ -269,8 +264,12 @@ def original_pose_FR(original_pose, replica):
 
     if debug: print(f"Step original_pose_FR: {pose.pdb_info().name()}")
 
-    sfxn_cartesian = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
-    sfxn_cartesian.score(pose)
+    if not_minimize:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
+    else:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+
+    sfxn.score(pose)
     random_seed_pyrosetta()
     score = repack_and_minimize(pose=pose, replica=replica)
     return score
@@ -280,8 +279,12 @@ def mutate_pose_FR(original_pose, replica, mutation):
     
     if debug: print(f"Step mutate_pose_FR: {pose.pdb_info().name()} {mutation}")
 
-    sfxn_cartesian = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
-    sfxn_cartesian.score(pose)
+    if not_minimize:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
+    else:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+
+    sfxn.score(pose)
     random_seed_pyrosetta()
     score, dG_interface = repack_and_minimize(pose=pose, replica=replica, mutation=mutation)
     return score, dG_interface
@@ -370,10 +373,22 @@ def ddG_calculation_double(x, df):
 
 #------------- Structure Preparing ---------------
 
+pose = pyrosetta.pose_from_pdb(pdb)
+original_pose = pose.clone()
+
+if not_minimize:
+    sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
+else:
+    sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+
+sfxn.score(pose)
+original_pose_score = sfxn.score(original_pose)
+
+
 if args.mode in ['FR', "FastRelax", 'RS', "Residue_scanning", 'DM', 'Double_Mut_Searching']:
 
     num_of_processes = REPLICS
-    original_pose_scores = {}
+    relaxed_pose_scores = {}
     lowest_energy_pose = ''
     lowest_energy = 0
 
@@ -383,20 +398,22 @@ if args.mode in ['FR', "FastRelax", 'RS', "Residue_scanning", 'DM', 'Double_Mut_
     for i in range(REPLICS):
         pose_name = f'{pdb.replace(".pdb", "")}_{i+1}.pdb'
         relaxed_pose = pyrosetta.pose_from_pdb(pose_name)
-        original_pose_scores[pose_name] = sfxn_cartesian.score(relaxed_pose)
+        relaxed_pose_scores[pose_name] = sfxn.score(relaxed_pose)
 
-    for relaxed_pose, energy in original_pose_scores.items():
+    for relaxed_pose, energy in relaxed_pose_scores.items():
         if energy < lowest_energy:
             lowest_energy = energy
             lowest_energy_pose = relaxed_pose
 
-    print(f'\n{lowest_energy_pose} has the smallest REU')
-    print(f'Original pose -- {round(sfxn_cartesian.score(original_pose), 2)} REU')
-    print(f'{lowest_energy_pose} pose -- {round(lowest_energy, 2)} REU')
+    print(f'\n{os.path.basename(lowest_energy_pose)} has the smallest REU')
+    print(f'Original pose -- {round(sfxn.score(original_pose), 2)} REU')
+    print(f'{os.path.basename(lowest_energy_pose)} pose -- {round(lowest_energy, 2)} REU')
 
     pose = pyrosetta.pose_from_pdb(lowest_energy_pose)
     original_pose = pose.clone()
-    sfxn_cartesian.score(pose)
+    sfxn.score(pose)
+
+    os.system(f'mkdir {os.path.dirname(pdb)}/FastRelax && mv {pdb.replace(".pdb", "")}_*.pdb {os.path.dirname(pdb)}/FastRelax/.')
 
     pose.dump_pdb('FastRelax.pdb')
 
@@ -407,7 +424,7 @@ if args.mode in ['RS', "Residue_scanning", 'DM', 'Double_Mut_Searching']:
     pose = pyrosetta.pose_from_pdb('FastRelax.pdb')
     original_pose = pose.clone()
 
-    print(f'\n{pose.pdb_info().name()} pose -- {round(sfxn_cartesian.score(pose), 2)} REU')
+    print(f'\n{pose.pdb_info().name()} pose -- {round(sfxn.score(pose), 2)} REU')
     df = prepare_mut_df(pose)
 
     df = df[df.apply(lambda x: not x.Name.startswith('P'), axis=1)]
