@@ -393,7 +393,7 @@ if args.mode in ['FR', "FastRelax", 'RS', "Residue_scanning", 'DM', 'Double_Mut_
     lowest_energy = 0
 
     with mp.Pool(num_of_processes) as pool:
-        REU_list = pool.starmap(original_pose_FR, [ (pose, i+1) for i in range(REPLICS) ]) # type: ignore
+        pool.starmap(original_pose_FR, [ (pose, i+1) for i in range(REPLICS) ]) # type: ignore
 
     for i in range(REPLICS):
         pose_name = f'{pdb.replace(".pdb", "")}_{i+1}.pdb'
