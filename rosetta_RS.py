@@ -81,23 +81,6 @@ args = parser.parse_args()
 
 
 
-input_file = os.path.abspath(args.file)
-
-if not os.path.isabs(args.output):
-    output_folder = os.path.join(os.path.dirname(input_file), args.output)
-else:
-    output_folder = args.output
-
-if not os.path.exists(output_folder): os.mkdir(output_folder)
-os.chdir(output_folder)
-
-subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/for_pyrosetta.pdb", shell=True)
-
-pyrosetta.toolbox.cleanATOM(f'{output_folder}/for_pyrosetta.pdb', f'{output_folder}/clear.pdb') # type: ignore
-pdb = f'{output_folder}/clear.pdb'
-
-
-
 #---------- Defaults -----------
 
 RADIUS = args.radius # angstrom
@@ -413,6 +396,22 @@ def df_ddG_postprocessing(df_concatenated, REPLICS=REPLICS, postfix=''):
 
 
 #------------- Structure Preparing ---------------
+
+input_file = os.path.abspath(args.file)
+
+if not os.path.isabs(args.output):
+    output_folder = os.path.join(os.path.dirname(input_file), args.output)
+else:
+    output_folder = args.output
+
+if not os.path.exists(output_folder): os.mkdir(output_folder)
+os.chdir(output_folder)
+
+subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/for_pyrosetta.pdb", shell=True)
+
+pyrosetta.toolbox.cleanATOM(f'{output_folder}/for_pyrosetta.pdb', f'{output_folder}/clear.pdb') # type: ignore
+pdb = f'{output_folder}/clear.pdb'
+
 
 pose = pyrosetta.pose_from_pdb(pdb)
 original_pose = pose.clone()
