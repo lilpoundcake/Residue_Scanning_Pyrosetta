@@ -14,10 +14,10 @@ from itertools import repeat
 
 #micromamba install python-blosc
 
-from pyrosetta import * 
-from pyrosetta.rosetta import * 
+from pyrosetta import *  # type: ignore
+from pyrosetta.rosetta import *  # type: ignore
 
-pyrosetta.init('-use_input_sc -flip_HNQ -ex1 -ex2 -relax:cartesian -ignore_unrecognized_res -mute all ')
+pyrosetta.init('-use_input_sc -flip_HNQ -ex1 -ex2 -relax:cartesian -ignore_unrecognized_res -mute all -ignore_zero_occupancy false')
 
 
 
@@ -52,7 +52,7 @@ parser.add_argument("-o", "--output",
                     default='results',
                     help='Path to output files. Default: folder "results" will be created')
 
-parser.add_argument("--not_minimize",
+parser.add_argument("--not_relax",
                     required=False,
                     action='store_true',
                     help='FastRelax Minimization of every structure is included by default. Use it if u dont need this (or u wanna make fast mut analysis)')
@@ -81,20 +81,20 @@ args = parser.parse_args()
 
 
 
+input_file = os.path.abspath(args.file)
+
 if not os.path.isabs(args.output):
-    output_folder = os.path.join(os.path.dirname(os.path.abspath(args.file)), args.output)
-    print(output_folder)
+    output_folder = os.path.join(os.path.dirname(input_file), args.output)
 else:
     output_folder = args.output
-
-input_file = os.path.abspath(args.file)
 
 if not os.path.exists(output_folder): os.mkdir(output_folder)
 os.chdir(output_folder)
 
-subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/rosetta.pdb", shell=True)
+subprocess.run(f"sed -E 's/HI(D|E|P)/HIS/g' {input_file} | sed -E 's/ASH/ASP/g' | sed -E 's/GLH/GLU/g' > {output_folder}/for_pyrosetta.pdb", shell=True)
 
-pdb = f'{output_folder}/rosetta.pdb'
+pyrosetta.toolbox.cleanATOM(f'{output_folder}/for_pyrosetta.pdb', f'{output_folder}/clear.pdb') # type: ignore
+pdb = f'{output_folder}/clear.pdb'
 
 
 
@@ -110,7 +110,7 @@ ligand_chains = args.ligand
 num_of_processes = args.cpu # count of cpus
 
 debug = args.debug
-not_minimize = args.not_minimize
+not_relax = args.not_relax
 
 three_to_one = {
     'ALA': 'A', 'ARG': 'R', 'ASN': 'N', 'ASP': 'D', 'CYS': 'C',
@@ -126,12 +126,33 @@ for key, value in three_to_one.items():
 
 ddG_condition = args.condition
 
+
+
 #---------- Functions ----------
 
 def random_seed_pyrosetta(debug=debug):
     seed_int = randint(0, 9999999)
     pyrosetta.rosetta.basic.random.init_random_generators(seed_int, 'mt19937')
     if debug: print(f'Seed is {seed_int}')
+
+
+
+def wildtyper(mut):
+    mut = '_'.join([ f'{i[:-1]}{i[0]}' for i in mut.replace(',', '_').split('_') ])
+    
+    return mut
+
+
+
+def score_fxn_checker(not_relax=not_relax):
+    if not_relax:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
+    else:
+        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+    
+    return sfxn
+
+
 
 def mutate(pose, mutation, debug=debug):
     if debug: print(f"Step mutate: {pose.pdb_info().name()} {mutation}")
@@ -164,8 +185,11 @@ def mutate(pose, mutation, debug=debug):
 
     return pose, rosetta_resid
 
-def interface_analyzer(pose, receptor_chains, ligand_chains, sfxn):
+
+
+def interface_analyzer(pose, receptor_chains=receptor_chains, ligand_chains=ligand_chains):
     iam = pyrosetta.rosetta.protocols.analysis.InterfaceAnalyzerMover()
+    sfxn = score_fxn_checker()
 
     iam.set_interface(f"{''.join(ligand_chains)}_{''.join(receptor_chains)}")
     iam.set_compute_packstat(False)
@@ -176,11 +200,13 @@ def interface_analyzer(pose, receptor_chains, ligand_chains, sfxn):
 
     return iam.get_interface_dG()
 
+
+
 def repack_and_minimize(pose, replica, mutation=False, 
-                        RADIUS=RADIUS, adjacent_aa_range=1, debug=debug, 
-                        receptor_chains=receptor_chains, ligand_chains=ligand_chains):
+                        RADIUS=RADIUS, adjacent_aa_range=1, debug=debug):
     
     if debug: print(f"Step repack_and_minimize: {pose.pdb_info().name()}")
+    sfxn = score_fxn_checker()
 
     all_residue_selector = pyrosetta.rosetta.core.select.residue_selector.TrueResidueSelector()
 
@@ -233,17 +259,16 @@ def repack_and_minimize(pose, replica, mutation=False,
             pyrosetta.rosetta.core.pack.task.operation.PreventRepackingRLT(),
             neighbor_selector, True
             ))
-    
-    if not_minimize or debug:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function("ref2015")
+
+    if not_relax or debug:
         pack_mover = pyrosetta.rosetta.protocols.minimization_packing.PackRotamersMover()
 
         pack_mover.score_function(sfxn)
         pack_mover.task_factory(tf)
         pack_mover.apply(pose)
     else:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
         fr = pyrosetta.rosetta.protocols.relax.FastRelax()
+
         fr.set_scorefxn(sfxn)
         fr.set_task_factory(tf)
         fr.set_movemap_factory(mmf)
@@ -253,41 +278,28 @@ def repack_and_minimize(pose, replica, mutation=False,
 
     if mutation != False:
         pose.dump_pdb(f'{pose.pdb_info().name().replace(".pdb", "")}_{mutation}_{replica}.pdb') # type: ignore
-        dG_interface = interface_analyzer(pose=pose, receptor_chains=receptor_chains, ligand_chains=ligand_chains, sfxn=sfxn)
-        return sfxn.score(pose), dG_interface
     else:
         pose.dump_pdb(f'{pose.pdb_info().name().replace(".pdb", "")}_{replica}.pdb') # type: ignore
-        return sfxn.score(pose)
-    
-def original_pose_FR(original_pose, replica):
-    pose = original_pose.clone()
 
-    if debug: print(f"Step original_pose_FR: {pose.pdb_info().name()}")
+    dG_interface = interface_analyzer(pose=pose)
+    return sfxn.score(pose), dG_interface
 
-    if not_minimize:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
-    else:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
 
-    sfxn.score(pose)
-    random_seed_pyrosetta()
-    score = repack_and_minimize(pose=pose, replica=replica)
-    return score
 
 def mutate_pose_FR(original_pose, replica, mutation):
     pose = original_pose.clone()
     
     if debug: print(f"Step mutate_pose_FR: {pose.pdb_info().name()} {mutation}")
 
-    if not_minimize:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
-    else:
-        sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+    sfxn = score_fxn_checker()
 
     sfxn.score(pose)
     random_seed_pyrosetta()
     score, dG_interface = repack_and_minimize(pose=pose, replica=replica, mutation=mutation)
+    
     return score, dG_interface
+
+
 
 def prepare_mut_df(pose):
     chains = {}
@@ -334,7 +346,9 @@ def prepare_mut_df(pose):
 
     return df
 
-def FastRelax_replics(pose, replics, mutation):
+
+
+def FastRelax_replics(pose, replics, mutation, not_relax=not_relax):
 
     if debug: print(f"Step FastRelax_replics: {pose.pdb_info().name()}")
 
@@ -343,43 +357,67 @@ def FastRelax_replics(pose, replics, mutation):
     for replica in range(1, replics+1):
         score_mut[replica-1], score_mut[replica-1+5] = mutate_pose_FR(original_pose=pose, replica=replica, mutation=mutation)
         if replica == 2:
-            if not_minimize:
+            if not_relax:
                 continue
             elif abs(score_mut[0] - score_mut[1]) < 1: # type: ignore
                 break
     if debug: print(mutation, score_mut)
+    
     return score_mut
+
+
 
 def df_FastRelax(df, pose, replics=REPLICS):
 
     if debug: print(f"Step df_FastRelax: {pose.pdb_info().name()}")
 
     df[list(df.columns[1:])] = df.apply(lambda x : FastRelax_replics(pose=pose, replics=replics, mutation=x.Name), axis=1).to_list()
+    
     return df
 
+
+
 def ddG_calculation(x, df):
-    wt_REU = df.loc[ df['Name'] == f'{x.Name[:-1]}{x.Name[0]}' , ['REU_min'] ].iat[0,0]
-    wt_dG_interface = df.loc[ df['Name'] == f'{x.Name[:-1]}{x.Name[0]}' , ['Min_dG_Interface'] ].iat[0,0]
+
+    wt_REU = df.loc[ df['Name'] == f'{wildtyper(x.Name)}' , ['REU_min'] ].iat[0,0]
+    wt_dG_interface = df.loc[ df['Name'] == f'{wildtyper(x.Name)}' , ['Min_dG_Interface'] ].iat[0,0]
+    
     return x.REU_min - wt_REU, x.Min_dG_Interface - wt_dG_interface
 
-def ddG_calculation_double(x, df):
-    if len(x.Name.split("_")) == 1:
-        wt_REU = df.loc[ df['Name'] == f'{x.Name[:-1]}{x.Name[0]}' , ['REU_min'] ].iat[0,0]
-        wt_dG_interface = df.loc[ df['Name'] == f'{x.Name[:-1]}{x.Name[0]}' , ['Min_dG_Interface'] ].iat[0,0]
-    else:
-        wt_REU = df.loc[ df['Name'] == f'{x.Name.split("_")[0][:-1]}{x.Name.split("_")[0][0]}_{x.Name.split("_")[1][:-1]}{x.Name.split("_")[1][0]}' , ['REU_min'] ].iat[0,0]
-        wt_dG_interface = df.loc[ df['Name'] == f'{x.Name.split("_")[0][:-1]}{x.Name.split("_")[0][0]}_{x.Name.split("_")[1][:-1]}{x.Name.split("_")[1][0]}' , ['Min_dG_Interface'] ].iat[0,0]
-    return x.REU_min - wt_REU, x.Min_dG_Interface - wt_dG_interface
+
+
+def df_ddG_postprocessing(df_concatenated, REPLICS=REPLICS, postfix=''):
+
+    df1 = df_concatenated.apply(lambda x : x.replace('NaN', 0))
+    df1.loc[:, 'REU_min'] = df1.apply(lambda x : min(x[1:REPLICS+1]), axis=1)
+    df1.loc[:, 'Min_structure'] = df1.apply(lambda x : list(x[1:REPLICS+1]).index( min( x[1:REPLICS+1] )) + 1, axis=1)
+    df1.loc[:, 'Min_dG_Interface'] = df1.apply(lambda x : x[f'Replica_{x.Min_structure}_dG'], axis=1)
+
+    df2 = df1.loc[:, ['Name', 'REU_min', 'Min_dG_Interface']]
+    df2.loc[:, 'Is_WT'] = df2.Name.apply(lambda x : x == wildtyper(x)) # type: ignore
+
+    if not os.path.exists(f"all_REU_pdb{postfix}"): os.mkdir(f"all_REU_pdb{postfix}")
+    os.system(f'mv {pose.pdb_info().name().replace(".pdb", "")}_* all_REU_pdb{postfix}')
+
+    if not os.path.exists(f"min_REU_pdb{postfix}"): os.mkdir(f"min_REU_pdb{postfix}")
+    df1.apply(lambda x : os.system(f'cp all_REU_pdb{postfix}/{pose.pdb_info().name().replace(".pdb", "")}_{x.Name}_{x.Min_structure}.pdb min_REU_pdb{postfix}'), axis=1)
+
+    df2.loc[:, ['ddG_complex', 'ddG_interface']] = df2.apply(lambda x: ddG_calculation(x, df2), axis=1).to_list()
+    df3 = df2.query('Is_WT != True').loc[:, ['Name', 'REU_min', 'ddG_complex', 'ddG_interface']].reset_index(drop=True)
+
+    df3 = df3.sort_values("ddG_interface")
+    df3.to_csv(f"Rosetta_ddG_mut{postfix}.csv", index=False)
+
+    return df3
+
+
 
 #------------- Structure Preparing ---------------
 
 pose = pyrosetta.pose_from_pdb(pdb)
 original_pose = pose.clone()
 
-if not_minimize:
-    sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015')
-else:
-    sfxn = pyrosetta.rosetta.core.scoring.ScoreFunctionFactory.create_score_function('ref2015_cart')
+sfxn = score_fxn_checker()
 
 sfxn.score(pose)
 original_pose_score = sfxn.score(original_pose)
@@ -393,7 +431,7 @@ if args.mode in ['FR', "FastRelax", 'RS', "Residue_scanning", 'DM', 'Double_Mut_
     lowest_energy = 0
 
     with mp.Pool(num_of_processes) as pool:
-        pool.starmap(original_pose_FR, [ (pose, i+1) for i in range(REPLICS) ]) # type: ignore
+        pool.starmap(mutate_pose_FR, [ (pose, i+1, False) for i in range(REPLICS) ]) # type: ignore
 
     for i in range(REPLICS):
         pose_name = f'{pdb.replace(".pdb", "")}_{i+1}.pdb'
@@ -417,6 +455,8 @@ if args.mode in ['FR', "FastRelax", 'RS', "Residue_scanning", 'DM', 'Double_Mut_
 
     pose.dump_pdb('FastRelax.pdb')
 
+
+
 #--------------- Residue Scanning ----------------
 
 if args.mode in ['RS', "Residue_scanning", 'DM', 'Double_Mut_Searching']:
@@ -427,10 +467,10 @@ if args.mode in ['RS', "Residue_scanning", 'DM', 'Double_Mut_Searching']:
     print(f'\n{pose.pdb_info().name()} pose -- {round(sfxn.score(pose), 2)} REU')
     df = prepare_mut_df(pose)
 
-    df = df[df.apply(lambda x: not x.Name.startswith('P'), axis=1)]
-    print(f'\nThere are {len(df)} mutations and {len(df)*5} with 5 replics\n')
+    df = df.loc[ ( -( df.loc[:, 'Name'].str.startswith('P') + df.loc[:, 'Name'].str.startswith('C') )), :] # type: ignore
+    print(f'\nThere are {len(df)} mutations and {len(df)*5} structures with 5 replics\n')
 
-    if debug: df = df.head(len(AA)*4)
+    if debug: df = df.head( len(AA) * 4 )
 
     num_of_processes = args.cpu
 
@@ -440,32 +480,15 @@ if args.mode in ['RS', "Residue_scanning", 'DM', 'Double_Mut_Searching']:
         df_splitted = np.array_split(df, num_of_processes) 
         df_concatenated = pd.concat(pool.starmap(df_FastRelax, zip(df_splitted, repeat(pose))))
 
-    df_concatenated.to_csv("results_REU.csv", index=False)
+    df_concatenated.to_csv("Rosetta_results_REU.csv", index=False)
 
-    df1 = df_concatenated.apply(lambda x : x.replace('NaN', 0))
-    df1['REU_min'] = df1.apply(lambda x : min(x[1:REPLICS+1]), axis=1)
-    df1['Min_structure'] = df1.apply(lambda x : list(x[1:REPLICS+1]).index( min( x[1:REPLICS+1] )) + 1, axis=1)
-    df1['Min_dG_Interface'] = df1.apply(lambda x : x[f'Replica_{x.Min_structure}_dG'], axis=1)
+    df3 = df_ddG_postprocessing(df_concatenated)
 
-    df2 = df1.loc[:, ['Name', 'REU_min', 'Min_dG_Interface']]
-    df2['Is_WT'] = df2.Name.apply(lambda x : x[0]==x[-1]) # type: ignore
 
-    if not os.path.exists("all_REU"): os.mkdir("all_REU")
-    os.system(f'mv {pose.pdb_info().name().replace(".pdb", "")}_* all_REU')
-
-    if not os.path.exists("min_REU"): os.mkdir("min_REU")
-    df1.apply(lambda x : os.system(f'cp all_REU/{pose.pdb_info().name().replace(".pdb", "")}_{x.Name}_{x.Min_structure}.pdb min_REU'), axis=1)
-
-    df2.loc[:, ['ddG_complex', 'ddG_interface']] = df2.apply(lambda x: ddG_calculation(x, df2), axis=1).to_list()
-    df3 = df2.query('Is_WT != True').loc[:, ['Name', 'REU_min', 'ddG_complex', 'ddG_interface']].reset_index(drop=True)
-
-    df3.sort_values("ddG_interface").to_csv("ddG_single_mut.csv", index=False)
 
 #------------- Double Mut Searching --------------
 
 if args.mode in ['DM', 'Double_Mut_Searching']:
-
-    df3 = pd.read_csv("ddG_single_mut.csv", index_col=False)
 
     if debug: 
         selected_positions = df3.Name.apply(lambda x : x[1:-1]).unique().tolist() # type: ignore
@@ -477,7 +500,6 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
     for i in selected_positions:
         residue_selector = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
         neighbor_selector = pyrosetta.rosetta.core.select.residue_selector.NeighborhoodResidueSelector()
-        #neighbor_selector.set_distance(RADIUS)
 
         chain = i[0]
 
@@ -509,13 +531,13 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
                     updated_neighbors_dict[key].append(value)
 
     if debug: 
-        df4 = df3.copy()
+        df4 = df3.copy() # type: ignore
     else:
-        df4 = df3.query(ddG_condition).copy()
+        df4 = df3.query(ddG_condition).copy() # type: ignore
     
-    df4['Position'] = df4.apply(lambda x : x.Name[1:-1], axis=1)
-    df4['Mutate_from'] = df4.apply(lambda x : x.Name[0], axis=1)
-    df4['Mutate_to'] = df4.apply(lambda x : x.Name[-1], axis=1)
+    df4.loc[:, 'Position'] = df4.apply(lambda x : x.Name[1:-1], axis=1)
+    df4.loc[:, 'Mutate_from'] = df4.apply(lambda x : x.Name[0], axis=1)
+    df4.loc[:, 'Mutate_to'] = df4.apply(lambda x : x.Name[-1], axis=1)
 
     df5 = df4.groupby("Position").agg(lambda x : (x).tolist()).loc[:, ['Mutate_to', 'Mutate_from']].reset_index()
 
@@ -524,10 +546,10 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
 
     for mut1, values in updated_neighbors_dict.items():
         for mut2 in values:
-            for mut1_to in df5.loc[ df5['Position'] == mut1, ['Mutate_to']].iat[0,0]: # type: ignore
-                mut1_from = df5.loc[ df5['Position'] == mut1, ['Mutate_from']].iat[0,0][0] # type: ignore
-                for mut2_to in df5.loc[ df5['Position'] == mut2, ['Mutate_to']].iat[0,0]: # type: ignore
-                    mut2_from = df5.loc[ df5['Position'] == mut2, ['Mutate_from']].iat[0,0][0] # type: ignore
+            for mut1_to in df5.loc[ df5['Position'] == mut1, ['Mutate_to'] ].iat[0,0]: # type: ignore
+                mut1_from = df5.loc[ df5['Position'] == mut1, ['Mutate_from'] ].iat[0,0][0] # type: ignore
+                for mut2_to in df5.loc[ df5['Position'] == mut2, ['Mutate_to'] ].iat[0,0]: # type: ignore
+                    mut2_from = df5.loc[ df5['Position'] == mut2, ['Mutate_from'] ].iat[0,0][0] # type: ignore
                     df_line = [f'{mut1_from}{mut1}{mut1_to}_{mut2_from}{mut2}{mut2_to}']
                     df_line.extend( [f'NaN' for i in range(REPLICS * 2)] )
                     mut_combinations.append(df_line)
@@ -551,25 +573,8 @@ if args.mode in ['DM', 'Double_Mut_Searching']:
         df_splitted = np.array_split(df6, num_of_processes) 
         df_concatenated = pd.concat(pool.starmap(df_FastRelax, zip(df_splitted, repeat(pose))))
 
-    df_concatenated.to_csv("Double_mut_REU.csv", index=False)
+    df_concatenated.to_csv("Rosetta_results_REU_double_mut.csv", index=False)
 
-    df1 = df_concatenated.apply(lambda x : x.replace('NaN', 0))
-    df1['REU_min'] = df1.apply(lambda x : min(x[1:REPLICS+1]), axis=1)
-    df1['Min_structure'] = df1.apply(lambda x : list(x[1:REPLICS+1]).index( min( x[1:REPLICS+1] )) + 1, axis=1)
-    df1['Min_dG_Interface'] = df1.apply(lambda x : x[f'Replica_{x.Min_structure}_dG'], axis=1)
-
-    df2 = df1.loc[:, ['Name', 'REU_min', 'Min_dG_Interface']]
-    df2['Is_WT'] = df2.Name.apply(lambda x : x.split("_")[0][0]==x.split("_")[0][-1]) # type: ignore
-
-    if not os.path.exists("all_REU_double_mut"): os.mkdir("all_REU_double_mut")
-    os.system(f'mv {pose.pdb_info().name().replace(".pdb", "")}_* all_REU_double_mut')
-
-    if not os.path.exists("min_REU_double_mut"): os.mkdir("min_REU_double_mut")
-    df1.apply(lambda x : os.system(f'cp all_REU_double_mut/{pose.pdb_info().name().replace(".pdb", "")}_{x.Name}_{x.Min_structure}.pdb min_REU_double_mut'), axis=1)
-
-    df2.loc[:, ['ddG_complex', 'ddG_interface']] = df2.apply(lambda x: ddG_calculation_double(x, df2), axis=1).to_list()
-    df3 = df2.query('Is_WT != True').loc[:, ['Name', 'REU_min', 'ddG_complex', 'ddG_interface']].reset_index(drop=True)
-
-    df3.sort_values("ddG_interface").to_csv("ddG_double_mut.csv", index=False)
+    df_ddG_postprocessing(df_concatenated, postfix='_double')
 
 print('\nDONE 🐁')

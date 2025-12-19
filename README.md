@@ -37,14 +37,14 @@ python rosetta_RS.py \
  - `-m`, `--mode` - Analysis protocol to execute (short or long versions accepted)
     - `FastRelax`,`FR` - protocol for relaxation of the input structure only (without Residue Scanning)
     - `Residue_Scanning`, `RS` - protocol for ddG calculation for every amino acid in the interface
-    - `Double_Mut_Searching`, `DM` - for searching double mutations in the interface. Performs `Residue_Scanning`, filters single  mutations using the `condition` (Default is `ddG_complex < 0.5 and ddG_interface < 0.5`), then combines nearby mutations within the specified `radius`
+    - `Double_Mut_Searching`, `DM` - for searching double mutations in the interface. Performs `Residue_Scanning`, filters single mutations using the [pandas-like](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.query.html) `condition` (Default is `ddG_complex < 0.5 and ddG_interface < 0.5`), then combines nearby mutations within the specified `radius`
  - `-r`, `--receptor` and `-l`, `--ligand` - chain names of receptor and ligand
  - `--cpu` - number of CPUs for parallelisation
 
 ### Optional keys
 
  - `--output` - directory for output files (Default: folder "results" will be created)
- - `--not_minimize` - skip the FastRelax minimization step (~10 minutes per structure). **Note**: This significantly reduces prediction accuracy
+ - `--not_relax` - skip the FastRelax minimization step (~10 minutes per structure). **Note**: This significantly reduces prediction accuracy
  - `--condition` - filtering criteria for single mutations in `Double_Mut_Searching` mode (Default: `ddG_complex < 0.5 and ddG_interface < 0.5`)
  - `--replics` - maximum number of conformational replicas for side-chain repacking
  - `--radius` - distance cutoff (Å) for considering amino acid pairs as neighbors in `Double_Mut_Searching` mode
@@ -77,7 +77,7 @@ python rosetta_RS.py \
 -f complex.pdb -o results \
 -r HL -l A \
 -mode DM --cpu 10 \
---not_minimize 
+--not_relax 
 ```
 
 ## Output files and folders
@@ -85,13 +85,13 @@ python rosetta_RS.py \
 The following files and folders will be generated in your specified output directory:
 
  - `FastRelax.pdb` - the energetically minimized structure with the lowest Rosetta Energy Units (REU) from the FastRelax protocol
- - `ddG_single_mut.csv` - CSV table containing ΔΔG values for all single-point mutations analyzed:
+ - `Rosetta_ddG_mut.csv` - CSV table containing ΔΔG values for all single-point mutations analyzed:
     - `ddG_complex`: free energy change for the entire complex. Indicates stability
     - `ddG_interface`: binding free energy change
- - `ddG_double_mut.csv` (Only in `Double_Mut_Searching` mode) - CSV table containing ΔΔG values for all double mutations analyzed, with the same columns as the single mutation table
+ - `Rosetta_ddG_mut_double.csv` (Only in `Double_Mut_Searching` mode) - CSV table containing ΔΔG values for all double mutations analyzed, with the same columns as the single mutation table
 
- - `min_REU` - lowest-energy structures for each single mutation
- - `min_REU_double_mut` - lowest-energy structures for each double mutation
+ - `min_REU_pdb` - lowest-energy structures for each single mutation
+ - `min_REU_pdb_double` - lowest-energy structures for each double mutation
 
 ## Citation
 
