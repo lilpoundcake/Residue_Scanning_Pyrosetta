@@ -87,8 +87,8 @@ def _parse_args(argv=None) -> argparse.Namespace:
         "--mutations_csv",
         type=str,
         default=None,
-        help="Path to CSV with custom mutations (AH98D) or positions (AH98). "
-        "Required for CM mode.",
+        help="Path to CSV with custom mutations (AH98D) or positions (AH98) for CM mode, "
+        "or position-pair entries (AH98_GL101) for DM mode.",
     )
     args = p.parse_args(argv)
     if args.mode in ("CM", "Custom_Mutations") and not args.mutations_csv:
@@ -108,8 +108,10 @@ def main(argv=None) -> None:
         _worker_init,
         df_ddG_postprocessing,
         df_FastRelax,
+        FastRelax_replics,
         mutate_pose_FR,
         prepare_custom_mut_df,
+        prepare_double_mut_df,
         prepare_mut_df,
         score_fxn_checker,
     )
@@ -319,7 +321,7 @@ def main(argv=None) -> None:
         logger.info("-" * 40)
 
         mutations_csv = Path(args.mutations_csv).resolve()
-        df = prepare_custom_mut_df(
+        df, ambiguity_reports = prepare_custom_mut_df(
             pose,
             mutations_csv,
             receptor_chains,
@@ -327,6 +329,14 @@ def main(argv=None) -> None:
             replics,
             debug,
         )
+
+        # Log any ambiguities detected
+        if ambiguity_reports:
+            logger.info("")
+            logger.info("CSV PARSING AMBIGUITIES DETECTED AND RESOLVED:")
+            for report in ambiguity_reports:
+                logger.info("  ℹ️  %s", report)
+            logger.info("")
 
         logger.info(
             "%d mutations x %d replicas = %d structures",
@@ -359,115 +369,198 @@ def main(argv=None) -> None:
             )
 
         df_concat.to_csv("Rosetta_results_REU.csv", index=False)
-        df3 = df_ddG_postprocessing(df_concat, pose, replics)
+        df3 = df_ddG_postprocessing(df_concat, pose, replics, ambiguity_reports=ambiguity_reports)
 
     # ------------------------------------------------------------------
     # Double Mutation block
     # ------------------------------------------------------------------
     if args.mode in ["DM", "Double_Mut_Searching"]:
-        if debug:
-            selected_positions = df3.Name.apply(lambda x: x[1:-1]).unique().tolist()  # type: ignore[union-attr]
-        else:
-            selected_positions = (
-                df3.query(ddg_condition).Name.apply(lambda x: x[1:-1]).unique().tolist()  # type: ignore[union-attr]
+        # Check if CSV-based DM mode is requested
+        if args.mutations_csv:
+            logger.info("")
+            logger.info("Double Mutations (CSV mode)")
+            logger.info("-" * 40)
+
+            mutations_csv = Path(args.mutations_csv).resolve()
+            df6 = prepare_double_mut_df(pose, mutations_csv, replics, debug)
+
+            logger.info(
+                "%d double mutations x %d replicas = %d structures",
+                len(df6),
+                replics,
+                len(df6) * replics,
             )
 
-        chains_map: dict[str, list] = {}
-        for i in range(1, pose.num_chains() + 1):
-            cs, ce = pose.chain_begin(i), pose.chain_end(i)
-            cname = pose.pdb_info().chain(cs)
-            chains_map[cname] = [i, cs, ce]
+            if debug:
+                df6 = df6.head(len(AA) * 4)
+                logger.info("Debug mode: limited to first %d double mutations", len(df6))
 
-        neighbors: dict[str, list[str]] = {}
-        for pos in selected_positions:
-            chain = pos[0]
-            if pos[-1].isalpha():
-                insertion_code = pos[-1]
-                pdb_num = int(pos[1:-1])
-                pyrosetta_pos = pose.pdb_info().pdb2pose(chain, pdb_num, insertion_code)
-            else:
-                pdb_num = int(pos[1:])
-                pyrosetta_pos = pose.pdb_info().pdb2pose(chain, pdb_num)
+            n_proc = min(args.cpu, len(df6))
 
-            res_sel = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
-            res_sel.set_index(pyrosetta_pos)
-            nbr_sel = pyrosetta.rosetta.core.select.residue_selector.NeighborhoodResidueSelector()
-            nbr_sel.set_focus_selector(res_sel)
-            nbr_sel.set_include_focus_in_subset(False)
-
-            for nbr in nbr_sel.selection_positions(pose):
-                nbr_pdb = pose.pdb_info().pose2pdb(nbr).split()
-                nbr_chain = nbr_pdb[1]
-                if nbr_chain in receptor_chains:
-                    neighbors.setdefault(pos, []).append(f"{nbr_chain}{nbr_pdb[0]}")
-
-        # Keep only mutual neighbours
-        mutual: dict[str, list[str]] = {}
-        for key, values in neighbors.items():
-            for val in values:
-                if val in neighbors and key not in mutual.get(val, []):
-                    mutual.setdefault(key, []).append(val)
-
-        if debug:
-            df4 = df3.copy()  # type: ignore[union-attr]
-        else:
-            df4 = df3.query(ddg_condition).copy()  # type: ignore[union-attr]
-
-        df4.loc[:, "Position"] = df4.Name.apply(lambda x: x[1:-1])
-        df4.loc[:, "Mutate_from"] = df4.Name.apply(lambda x: x[0])
-        df4.loc[:, "Mutate_to"] = df4.Name.apply(lambda x: x[-1])
-
-        df5 = (
-            df4.groupby("Position")
-            .agg(lambda x: x.tolist())
-            .loc[:, ["Mutate_to", "Mutate_from"]]
-            .reset_index()
-        )
-
-        mut_combinations: list[list] = []
-        for pos1, nbrs in mutual.items():
-            from1 = df5.loc[df5["Position"] == pos1, "Mutate_from"].iat[0][0]
-            for pos2 in nbrs:
-                from2 = df5.loc[df5["Position"] == pos2, "Mutate_from"].iat[0][0]
-                for to1 in df5.loc[df5["Position"] == pos1, "Mutate_to"].iat[0]:
-                    for to2 in df5.loc[df5["Position"] == pos2, "Mutate_to"].iat[0]:
-                        row = [f"{from1}{pos1}{to1}_{from2}{pos2}{to2}"]
-                        row.extend(["NaN"] * (replics * 2))
-                        mut_combinations.append(row)
-                # Wildtype pair
-                wt_row = [f"{from1}{pos1}{from1}_{from2}{pos2}{from2}"]
-                wt_row.extend(["NaN"] * (replics * 2))
-                mut_combinations.append(wt_row)
-
-        logger.info("%d double mutation combinations", len(mut_combinations))
-
-        col_names = ["Name"]
-        col_names += [f"Replica_{i+1}_Complex" for i in range(replics)]
-        col_names += [f"Replica_{i+1}_dG" for i in range(replics)]
-        df6 = pd.DataFrame(mut_combinations, columns=col_names)
-
-        n_proc = min(args.cpu, len(df6))
-
-        with mp.Pool(n_proc, initializer=_worker_init) as pool:
-            df_split = np.array_split(df6, n_proc)
-            df_concat = pd.concat(
-                pool.starmap(
-                    df_FastRelax,
-                    zip(
-                        df_split,
-                        repeat(pose),
-                        repeat(replics),
-                        repeat(receptor_chains),
-                        repeat(ligand_chains),
-                        repeat(not_relax),
-                        repeat(debug),
-                        repeat(radius),
-                    ),
+            with mp.Pool(n_proc, initializer=_worker_init) as pool:
+                df_split = np.array_split(df6, n_proc)
+                df_concat = pd.concat(
+                    pool.starmap(
+                        df_FastRelax,
+                        zip(
+                            df_split,
+                            repeat(pose),
+                            repeat(replics),
+                            repeat(receptor_chains),
+                            repeat(ligand_chains),
+                            repeat(not_relax),
+                            repeat(debug),
+                            repeat(radius),
+                        ),
+                    )
                 )
+
+            df_concat.to_csv("Rosetta_results_REU_double_mut.csv", index=False)
+            logger.info("CSV-based DM evaluation complete: results saved")
+
+            df_ddG_postprocessing(df_concat, pose, replics, postfix="_double")
+        else:
+            # Condition-based DM mode (existing behavior)
+            logger.info("")
+            logger.info("Double Mutations (Condition-based mode)")
+            logger.info("-" * 40)
+
+            if debug:
+                selected_positions = df3.Name.apply(lambda x: x[1:-1]).unique().tolist()  # type: ignore[union-attr]
+            else:
+                selected_positions = (
+                    df3.query(ddg_condition).Name.apply(lambda x: x[1:-1]).unique().tolist()  # type: ignore[union-attr]
+                )
+
+            logger.info(
+                "Filtered %d single positions by condition: %s",
+                len(selected_positions),
+                ddg_condition,
             )
 
-        df_concat.to_csv("Rosetta_results_REU_double_mut.csv", index=False)
-        df_ddG_postprocessing(df_concat, pose, replics, postfix="_double")
+            chains_map: dict[str, list] = {}
+            for i in range(1, pose.num_chains() + 1):
+                cs, ce = pose.chain_begin(i), pose.chain_end(i)
+                cname = pose.pdb_info().chain(cs)
+                chains_map[cname] = [i, cs, ce]
+
+            neighbors: dict[str, list[str]] = {}
+            for pos in selected_positions:
+                chain = pos[0]
+                if pos[-1].isalpha():
+                    insertion_code = pos[-1]
+                    pdb_num = int(pos[1:-1])
+                    pyrosetta_pos = pose.pdb_info().pdb2pose(chain, pdb_num, insertion_code)
+                else:
+                    pdb_num = int(pos[1:])
+                    pyrosetta_pos = pose.pdb_info().pdb2pose(chain, pdb_num)
+
+                res_sel = pyrosetta.rosetta.core.select.residue_selector.ResidueIndexSelector()
+                res_sel.set_index(pyrosetta_pos)
+                nbr_sel = pyrosetta.rosetta.core.select.residue_selector.NeighborhoodResidueSelector()
+                nbr_sel.set_focus_selector(res_sel)
+                nbr_sel.set_include_focus_in_subset(False)
+
+                for nbr in nbr_sel.selection_positions(pose):
+                    nbr_pdb = pose.pdb_info().pose2pdb(nbr).split()
+                    nbr_chain = nbr_pdb[1]
+                    if nbr_chain in receptor_chains:
+                        neighbors.setdefault(pos, []).append(f"{nbr_chain}{nbr_pdb[0]}")
+
+            # Keep only mutual neighbours
+            mutual: dict[str, list[str]] = {}
+            for key, values in neighbors.items():
+                for val in values:
+                    if val in neighbors and key not in mutual.get(val, []):
+                        mutual.setdefault(key, []).append(val)
+
+            logger.info("Identified %d mutual neighbor pairs", len(mutual))
+
+            if debug:
+                df4 = df3.copy()  # type: ignore[union-attr]
+            else:
+                df4 = df3.query(ddg_condition).copy()  # type: ignore[union-attr]
+
+            df4.loc[:, "Position"] = df4.Name.apply(lambda x: x[1:-1])
+            df4.loc[:, "Mutate_from"] = df4.Name.apply(lambda x: x[0])
+            df4.loc[:, "Mutate_to"] = df4.Name.apply(lambda x: x[-1])
+
+            df5 = (
+                df4.groupby("Position")
+                .agg(lambda x: x.tolist())
+                .loc[:, ["Mutate_to", "Mutate_from"]]
+                .reset_index()
+            )
+
+            mut_combinations: list[list] = []
+            wt_pairs_created: set = set()  # Track unique wildtype pairs to avoid duplication
+
+            for pos1, nbrs in mutual.items():
+                from1 = df5.loc[df5["Position"] == pos1, "Mutate_from"].iat[0][0]
+                for pos2 in nbrs:
+                    if pos1 == pos2:
+                        continue
+                    from2 = df5.loc[df5["Position"] == pos2, "Mutate_from"].iat[0][0]
+
+                    # Add wildtype pair once per neighbor pair
+                    wt_pair = f"{from1}{pos1}{from1}_{from2}{pos2}{from2}"
+                    if wt_pair not in wt_pairs_created:
+                        wt_row = [wt_pair]
+                        wt_row.extend(["NaN"] * (replics * 2))
+                        mut_combinations.append(wt_row)
+                        wt_pairs_created.add(wt_pair)
+
+                    for to1 in df5.loc[df5["Position"] == pos1, "Mutate_to"].iat[0]:
+                        for to2 in df5.loc[df5["Position"] == pos2, "Mutate_to"].iat[0]:
+                            row = [f"{from1}{pos1}{to1}_{from2}{pos2}{to2}"]
+                            row.extend(["NaN"] * (replics * 2))
+                            mut_combinations.append(row)
+
+            logger.info(
+                "%d double mutation combinations generated",
+                len(mut_combinations),
+            )
+
+            col_names = ["Name"]
+            col_names += [f"Replica_{i+1}_Complex" for i in range(replics)]
+            col_names += [f"Replica_{i+1}_dG" for i in range(replics)]
+            df6 = pd.DataFrame(mut_combinations, columns=col_names)
+
+            logger.info(
+                "%d double mutations x %d replicas = %d structures",
+                len(df6),
+                replics,
+                len(df6) * replics,
+            )
+
+            if debug:
+                df6 = df6.head(len(AA) * 4)
+                logger.info("Debug mode: limited to first %d double mutations", len(df6))
+
+            n_proc = min(args.cpu, len(df6))
+
+            with mp.Pool(n_proc, initializer=_worker_init) as pool:
+                df_split = np.array_split(df6, n_proc)
+                df_concat = pd.concat(
+                    pool.starmap(
+                        df_FastRelax,
+                        zip(
+                            df_split,
+                            repeat(pose),
+                            repeat(replics),
+                            repeat(receptor_chains),
+                            repeat(ligand_chains),
+                            repeat(not_relax),
+                            repeat(debug),
+                            repeat(radius),
+                        ),
+                    )
+                )
+
+            df_concat.to_csv("Rosetta_results_REU_double_mut.csv", index=False)
+            logger.info("Condition-based DM evaluation complete: results saved")
+
+            df_ddG_postprocessing(df_concat, pose, replics, postfix="_double")
 
     logger.info("")
     logger.info("DONE")

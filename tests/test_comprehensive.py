@@ -4,7 +4,8 @@ Tests:
 1. Interface residue selection on 4ZFO and 5JXE with report generation
 2. RS (Residue Scanning) mode on all PDB files with --debug --not_relax
 3. CM (Custom Mutations) mode on 7S7I.pdb with input CSV
-4. Verification of output files and data integrity
+4. DM (Double Mutation) mode on 7S7I.pdb with --debug --not_relax
+5. Verification of output files and data integrity
 
 Folder structure:
     tests/pdbs/                          # PDB files
@@ -17,6 +18,7 @@ Folder structure:
         selection/                       # Interface selection reports
         RS/{PDB}/                        # RS mode results
         custom_csv/                      # CM mode results
+        double_mut/                      # DM mode results
 """
 
 import json
@@ -349,7 +351,309 @@ def test_custom_mutations_7s7i():
 
 
 # ============================================================================
-# TEST 4: Verify Output Files
+# TEST 4: Double Mutations (DM Mode)
+# ============================================================================
+
+
+@pytest.mark.slow
+def test_double_mutations_7s7i_short():
+    """Quick test for DM (Double Mutation) mode on 7S7I.pdb.
+
+    Uses --debug to limit to 4 interface positions (~100-200 double mutations).
+    Runs both condition-based and CSV-based DM modes.
+
+    Configuration: --debug --not_relax --cpu 8
+
+    Duration: ~3-5 minutes
+    Outputs to tests/results/double_mut_short/
+    """
+    from residue_scanning.cli import main
+
+    pdb_file = PDBS_DIR / "7S7I.pdb"
+
+    if not pdb_file.exists():
+        pytest.skip(f"{pdb_file} not found")
+
+    output_dir = RESULTS_DIR / "double_mut_short"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    original_cwd = os.getcwd()
+
+    try:
+        # Sub-test 1: Condition-based DM mode (short)
+        print(f"\n{'='*60}")
+        print("Testing DM mode (condition-based SHORT) on 7S7I.pdb")
+        print(f"{'='*60}")
+
+        output_dir_condition = output_dir / "condition_based"
+        output_dir_condition.mkdir(parents=True, exist_ok=True)
+
+        main(
+            argv=[
+                "-f",
+                str(pdb_file),
+                "-r",
+                "HL",
+                "-l",
+                "A",
+                "-m",
+                "DM",
+                "--condition",
+                "ddG_interface < 0",
+                "--cpu",
+                "8",
+                "--not_relax",
+                "--debug",
+                "-o",
+                str(output_dir_condition),
+            ]
+        )
+
+        # Verify outputs
+        assert (
+            output_dir_condition / "FastRelax.pdb"
+        ).exists(), "FastRelax.pdb missing for condition-based DM"
+        assert (
+            output_dir_condition / "Rosetta_ddG_mut_double.csv"
+        ).exists(), "Rosetta_ddG_mut_double.csv missing for condition-based DM"
+
+        # Verify double mutation CSV has expected columns
+        import pandas as pd
+
+        df_double = pd.read_csv(output_dir_condition / "Rosetta_ddG_mut_double.csv")
+        assert not df_double.empty, "Double mutation CSV is empty"
+        assert "Name" in df_double.columns, "Missing 'Name' column in double mutations"
+        assert (
+            "ddG_interface" in df_double.columns
+        ), "Missing 'ddG_interface' column in double mutations"
+
+        # Verify double mutation names contain underscore (format: XXX_YYY)
+        if len(df_double) > 0:
+            for name in df_double["Name"].head():
+                assert (
+                    "_" in name
+                ), f"Double mutation name should contain underscore: {name}"
+
+        print(
+            f"✅ Condition-based DM SHORT test passed ({len(df_double)} double mutations)"
+        )
+
+        # Sub-test 2: CSV-based DM mode (short)
+        print(f"\n{'='*60}")
+        print("Testing DM mode (CSV-based SHORT) on 7S7I.pdb")
+        print(f"{'='*60}")
+
+        csv_file = CSV_DIR / "input_csv.csv"
+        if not csv_file.exists():
+            pytest.skip(f"{csv_file} not found")
+
+        output_dir_csv = output_dir / "csv_based"
+        output_dir_csv.mkdir(parents=True, exist_ok=True)
+
+        main(
+            argv=[
+                "-f",
+                str(pdb_file),
+                "-r",
+                "HL",
+                "-l",
+                "A",
+                "-m",
+                "DM",
+                "--mutations_csv",
+                str(csv_file),
+                "--cpu",
+                "8",
+                "--not_relax",
+                "--debug",
+                "-o",
+                str(output_dir_csv),
+            ]
+        )
+
+        # Verify outputs
+        assert (
+            output_dir_csv / "FastRelax.pdb"
+        ).exists(), "FastRelax.pdb missing for CSV-based DM"
+        assert (
+            output_dir_csv / "Rosetta_ddG_mut_double.csv"
+        ).exists(), "Rosetta_ddG_mut_double.csv missing for CSV-based DM"
+
+        # Verify CSV-based DM results
+        df_csv = pd.read_csv(output_dir_csv / "Rosetta_ddG_mut_double.csv")
+        assert not df_csv.empty, "CSV-based DM result CSV is empty"
+        assert "Name" in df_csv.columns, "Missing 'Name' column in CSV-based DM results"
+
+        # Verify double mutation names contain underscore
+        if len(df_csv) > 0:
+            for name in df_csv["Name"]:
+                assert (
+                    "_" in name
+                ), f"Double mutation name should contain underscore: {name}"
+
+        print(f"✅ CSV-based DM SHORT test passed ({len(df_csv)} double mutations)")
+
+    finally:
+        os.chdir(original_cwd)
+
+
+@pytest.mark.slow
+def test_double_mutations_7s7i_long(cpu: str = "4", debug: bool = False, not_relax: bool = True):
+    """Comprehensive test for DM (Double Mutation) mode on 7S7I.pdb.
+
+    Parameters:
+    - cpu: Number of CPUs to use (default: "4")
+    - debug: Limit to 4 interface positions if True (default: False - evaluate all)
+    - not_relax: Skip FastRelax if True (default: True)
+
+    Runs both condition-based and CSV-based DM modes.
+
+    Duration:
+    - With --debug: ~5 minutes
+    - Without --debug (all mutations): ~30-45 minutes
+
+    Outputs to tests/results/double_mut_long/
+    """
+    from residue_scanning.cli import main
+
+    pdb_file = PDBS_DIR / "7S7I.pdb"
+
+    if not pdb_file.exists():
+        pytest.skip(f"{pdb_file} not found")
+
+    output_dir = RESULTS_DIR / "double_mut_long"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    original_cwd = os.getcwd()
+
+    try:
+        # Sub-test 1: Condition-based DM mode (long)
+        print(f"\n{'='*60}")
+        print("Testing DM mode (condition-based LONG) on 7S7I.pdb")
+        print(f"  CPU cores: {cpu}")
+        print(f"  Debug mode: {debug}")
+        print(f"  Skip FastRelax: {not_relax}")
+        print(f"{'='*60}")
+
+        output_dir_condition = output_dir / "condition_based"
+        output_dir_condition.mkdir(parents=True, exist_ok=True)
+
+        argv = [
+            "-f",
+            str(pdb_file),
+            "-r",
+            "HL",
+            "-l",
+            "A",
+            "-m",
+            "DM",
+            "--condition",
+            "ddG_interface < 0",
+            "--cpu",
+            cpu,
+        ]
+        if not_relax:
+            argv.append("--not_relax")
+        if debug:
+            argv.append("--debug")
+        argv.extend(["-o", str(output_dir_condition)])
+
+        main(argv=argv)
+
+        # Verify outputs
+        assert (
+            output_dir_condition / "FastRelax.pdb"
+        ).exists(), "FastRelax.pdb missing for condition-based DM"
+        assert (
+            output_dir_condition / "Rosetta_ddG_mut_double.csv"
+        ).exists(), "Rosetta_ddG_mut_double.csv missing for condition-based DM"
+
+        # Verify double mutation CSV has expected columns
+        import pandas as pd
+
+        df_double = pd.read_csv(output_dir_condition / "Rosetta_ddG_mut_double.csv")
+        assert not df_double.empty, "Double mutation CSV is empty"
+        assert "Name" in df_double.columns, "Missing 'Name' column in double mutations"
+        assert (
+            "ddG_interface" in df_double.columns
+        ), "Missing 'ddG_interface' column in double mutations"
+
+        # Verify double mutation names contain underscore (format: XXX_YYY)
+        if len(df_double) > 0:
+            for name in df_double["Name"].head():
+                assert (
+                    "_" in name
+                ), f"Double mutation name should contain underscore: {name}"
+
+        print(
+            f"✅ Condition-based DM LONG test passed ({len(df_double)} double mutations)"
+        )
+
+        # Sub-test 2: CSV-based DM mode (long)
+        print(f"\n{'='*60}")
+        print("Testing DM mode (CSV-based LONG) on 7S7I.pdb")
+        print(f"  CPU cores: {cpu}")
+        print(f"  Debug mode: {debug}")
+        print(f"  Skip FastRelax: {not_relax}")
+        print(f"{'='*60}")
+
+        csv_file = CSV_DIR / "input_csv.csv"
+        if not csv_file.exists():
+            pytest.skip(f"{csv_file} not found")
+
+        output_dir_csv = output_dir / "csv_based"
+        output_dir_csv.mkdir(parents=True, exist_ok=True)
+
+        argv = [
+            "-f",
+            str(pdb_file),
+            "-r",
+            "HL",
+            "-l",
+            "A",
+            "-m",
+            "DM",
+            "--mutations_csv",
+            str(csv_file),
+            "--cpu",
+            cpu,
+        ]
+        if not_relax:
+            argv.append("--not_relax")
+        if debug:
+            argv.append("--debug")
+        argv.extend(["-o", str(output_dir_csv)])
+
+        main(argv=argv)
+
+        # Verify outputs
+        assert (
+            output_dir_csv / "FastRelax.pdb"
+        ).exists(), "FastRelax.pdb missing for CSV-based DM"
+        assert (
+            output_dir_csv / "Rosetta_ddG_mut_double.csv"
+        ).exists(), "Rosetta_ddG_mut_double.csv missing for CSV-based DM"
+
+        # Verify CSV-based DM results
+        df_csv = pd.read_csv(output_dir_csv / "Rosetta_ddG_mut_double.csv")
+        assert not df_csv.empty, "CSV-based DM result CSV is empty"
+        assert "Name" in df_csv.columns, "Missing 'Name' column in CSV-based DM results"
+
+        # Verify double mutation names contain underscore
+        if len(df_csv) > 0:
+            for name in df_csv["Name"]:
+                assert (
+                    "_" in name
+                ), f"Double mutation name should contain underscore: {name}"
+
+        print(f"✅ CSV-based DM LONG test passed ({len(df_csv)} double mutations)")
+
+    finally:
+        os.chdir(original_cwd)
+
+
+# ============================================================================
+# TEST 5: Verify Output Files
 # ============================================================================
 
 
@@ -382,6 +686,19 @@ def test_verify_all_outputs():
             assert not df.empty, "CM result CSV is empty"
             assert "Name" in df.columns, "Missing 'Name' column in CM results"
             print(f"✅ Verified CM results ({len(df)} rows)")
+
+    # Check DM (double mutation) results
+    dm_dir = RESULTS_DIR / "double_mut"
+    if dm_dir.exists():
+        csv_file = dm_dir / "Rosetta_ddG_mut_double.csv"
+        if csv_file.exists():
+            df = pd.read_csv(csv_file)
+            assert not df.empty, "DM result CSV is empty"
+            assert "Name" in df.columns, "Missing 'Name' column in DM results"
+            # Verify double mutation format (contains underscore)
+            for name in df["Name"]:
+                assert "_" in name, f"Invalid double mutation name format: {name}"
+            print(f"✅ Verified DM results ({len(df)} double mutations)")
 
     # Check interface selection report
     report_file = RESULTS_DIR / "selection" / "INTERFACE_SELECTION_REPORT.txt"

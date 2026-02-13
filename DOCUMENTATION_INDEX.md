@@ -19,14 +19,14 @@
 
 ### 👨‍💻 For Developers
 - **[CLAUDE.md](CLAUDE.md)** — Architecture, modules, execution flow
-- **[BUILD_INFO.md](BUILD_INFO.md)** — Building wheels and distributions
+- **[DISTRIBUTION_GUIDE.md](DISTRIBUTION_GUIDE.md)** — Building wheels and distributions
 - **[PROJECT_STATUS.md](PROJECT_STATUS.md)** — Project structure and decisions
 - **[COMPLETION_SUMMARY.md](COMPLETION_SUMMARY.md)** — What was built
 
 ### 📊 For Project Managers
 - **[PROJECT_COMPLETION_REPORT.md](PROJECT_COMPLETION_REPORT.md)** — Executive summary
 - **[FINAL_TEST_RESULTS.md](FINAL_TEST_RESULTS.md)** — Test metrics and performance
-- **[BUILD_INFO.md](BUILD_INFO.md)** — Distribution details
+- **[DISTRIBUTION_GUIDE.md](DISTRIBUTION_GUIDE.md)** — Distribution details
 
 ---
 
@@ -64,52 +64,63 @@
 #### 3. **tests/TESTING_GUIDE.md**
 - **Purpose**: Comprehensive testing documentation
 - **Audience**: Users who want to run or understand tests
-- **Length**: 13 pages (combined from 2 files)
+- **Length**: 13 pages
 - **Topics**:
-  - Test suite overview (4 tests)
+  - Test suite overview (5 tests)
   - Quick start commands
   - Directory structure
   - Test 1: Interface Selection (KDTree validation)
   - Test 2: Residue Scanning (RS mode)
   - Test 3: Custom Mutations (CM mode)
-  - Test 4: Output Verification
+  - Test 4: Double Mutations (DM mode)
+  - Test 5: Output Verification
   - Understanding results & ΔΔG interpretation
   - Performance metrics
   - Troubleshooting
 - **Time to read**: 15-20 minutes
 
+#### 4. **tests/TEST_SUITE.md** (NEW)
+- **Purpose**: Complete test suite documentation with all 5 tests
+- **Audience**: Users, QA, developers
+- **Length**: 15 pages
+- **Topics**:
+  - Test suite overview (5 tests)
+  - Test 1: Interface Selection (KDTree validation)
+  - Test 2: Residue Scanning (RS mode, 3 PDBs)
+  - Test 3: Custom Mutations (CM mode)
+  - Test 4: Double Mutations (DM mode with CSV support) ✨ NEW
+  - Test 5: Output Verification
+  - Running tests (individual and all)
+  - Test data files
+  - Performance notes and optimization
+  - Quality metrics
+  - Troubleshooting
+- **Time to read**: 20-25 minutes
+
 ---
 
 ### Installation & Distribution
 
-#### 4. **DISTRIBUTION_GUIDE.md**
-- **Purpose**: How to distribute and install the package
+#### 5. **DISTRIBUTION_GUIDE.md**
+- **Purpose**: How to distribute, build, and install the package
 - **Audience**: Users, developers
-- **Length**: 8 pages
+- **Length**: 12 pages (includes build details)
 - **Topics**:
   - Quick distribution summary
   - Installation for end users
   - Usage examples
   - Distribution channels (GitHub, PyPI, Docker, etc.)
+  - Package contents checklist
+  - Installation from different sources
   - Version management
   - Verification & testing
   - Support information
-- **Time to read**: 10 minutes
-
-#### 5. **BUILD_INFO.md**
-- **Purpose**: Build and wheel distribution details
-- **Audience**: Developers, release managers
-- **Length**: 7 pages
-- **Topics**:
-  - Available distributions (wheel, source)
-  - Installation methods
+  - Build history & details
   - Build configuration
-  - Package contents
   - Building distributions
   - Quality assurance
-  - Release checklist
   - Troubleshooting builds
-- **Time to read**: 10 minutes
+- **Time to read**: 15 minutes
 
 ---
 
@@ -216,9 +227,21 @@
   - Test summary
   - Documentation reference
 - **Time to read**: 2 minutes
-- **Note**: Points to TESTING_GUIDE.md for detailed information
+- **Note**: Points to TEST_SUITE.md for detailed information
 
-#### 12. **DOCUMENTATION_INDEX.md** (This File)
+#### 12. **tests/TEST_SUITE.md** (NEW)
+- **Purpose**: Complete test suite documentation
+- **Audience**: Users, QA, developers
+- **Length**: 15 pages
+- **Topics**:
+  - All 5 tests with detailed descriptions
+  - Test data files
+  - Running tests
+  - Performance metrics
+  - Troubleshooting
+- **Time to read**: 20-25 minutes
+
+#### 13. **DOCUMENTATION_INDEX.md** (This File)
 - **Purpose**: Guide to all documentation
 - **Audience**: Everyone
 - **Length**: This file
@@ -250,8 +273,8 @@
 **Time commitment**: 1-2 hours
 1. README.md (overview)
 2. CLAUDE.md (architecture)
-3. tests/TESTING_GUIDE.md (testing strategy)
-4. BUILD_INFO.md (releases)
+3. tests/TEST_SUITE.md (testing strategy)
+4. DISTRIBUTION_GUIDE.md (releases & builds)
 5. PROJECT_STATUS.md (project structure)
 6. CODE REVIEW (residue_scanning/*.py files)
 
@@ -264,9 +287,9 @@
 
 ### 🏢 DevOps / Release Manager
 **Time commitment**: 30 minutes
-1. BUILD_INFO.md (how to build)
-2. DISTRIBUTION_GUIDE.md (distribution channels)
-3. CLAUDE.md (environment setup)
+1. DISTRIBUTION_GUIDE.md (how to build and distribute)
+2. CLAUDE.md (environment setup)
+3. tests/TEST_SUITE.md (testing before release)
 
 ---
 
@@ -274,8 +297,7 @@
 
 ### Installation & Setup
 - README.md — Installation (4 methods)
-- DISTRIBUTION_GUIDE.md — Distribution & installation options
-- BUILD_INFO.md — Building from source
+- DISTRIBUTION_GUIDE.md — Distribution, installation options, & building from source
 - CLAUDE.md — Development environment
 
 ### Usage & Examples
@@ -284,12 +306,13 @@
 - CLAUDE.md — Running the CLI
 
 ### Testing & Validation
-- tests/TESTING_GUIDE.md — Test suite (4 tests)
+- tests/TEST_SUITE.md — Test suite (5 tests) ✨ NEW
+- tests/TESTING_GUIDE.md — Testing guide
 - FINAL_TEST_RESULTS.md — Test results & metrics
 - PROJECT_STATUS.md — Test status
 
 ### CSV Format (Critical!)
-- CSV_FORMAT_GUIDE.md — Complete reference (⭐ most important)
+- CSV_FORMAT_GUIDE.md — Complete reference with ambiguity resolution (⭐ most important)
 - tests/TESTING_GUIDE.md — CSV in context of tests
 - README.md — Quick reference
 
@@ -304,9 +327,8 @@
 - BUILD_INFO.md — Build requirements
 
 ### Distribution & Deployment
-- DISTRIBUTION_GUIDE.md — Distribution options
-- BUILD_INFO.md — Building wheels
-- README.md — Installation methods
+- DISTRIBUTION_GUIDE.md — Distribution options, building wheels, & installation methods
+- README.md — Quick installation reference
 
 ---
 
@@ -321,11 +343,11 @@ Project Root/
 ├── PROJECT_COMPLETION_REPORT.md     Executive summary
 ├── FINAL_TEST_RESULTS.md            Test metrics
 ├── COMPLETION_SUMMARY.md            What was built
-├── DISTRIBUTION_GUIDE.md            Distribution options
-├── BUILD_INFO.md                    Build details
+├── DISTRIBUTION_GUIDE.md            Distribution & build (merged BUILD_INFO)
 ├── DOCUMENTATION_INDEX.md           This file
 │
 ├── tests/
+│   ├── TEST_SUITE.md                ✨ NEW: Complete test documentation
 │   ├── TESTING_GUIDE.md             How to run tests
 │   └── README.md                    Quick test reference
 │
@@ -356,8 +378,9 @@ Project Root/
 - "How do I install?" → README.md
 - "How do I use it?" → README.md
 - "How do I specify mutations?" → CSV_FORMAT_GUIDE.md
-- "How do I run tests?" → TESTING_GUIDE.md
-- "How is this built?" → BUILD_INFO.md, CLAUDE.md
+- "How do I run tests?" → tests/TEST_SUITE.md, tests/TESTING_GUIDE.md
+- "What logging will I see?" → tests/TESTING_GUIDE.md (console output examples)
+- "How is this built?" → DISTRIBUTION_GUIDE.md, CLAUDE.md
 - "What was done?" → PROJECT_COMPLETION_REPORT.md
 - "How do I distribute this?" → DISTRIBUTION_GUIDE.md
 - "What are the test results?" → FINAL_TEST_RESULTS.md
@@ -406,12 +429,13 @@ Project Root/
 
 ## Documentation Quality
 
-- ✅ **Comprehensive**: 86 pages covering all aspects
+- ✅ **Comprehensive**: 90+ pages covering all aspects
 - ✅ **Well-Indexed**: This file + cross-references
 - ✅ **Multiple Formats**: Quick guides + detailed references
 - ✅ **Code Examples**: Real examples in every guide
 - ✅ **Troubleshooting**: Dedicated sections in relevant files
 - ✅ **Role-Based**: Different guides for different users
+- ✅ **Consolidated**: Merged BUILD_INFO & AMBIGUITY_HANDLING into main docs
 - ✅ **Up-to-Date**: Last updated 2026-02-13
 
 ---
@@ -432,7 +456,12 @@ Project Root/
 
 ---
 
-**Documentation Status**: ✅ COMPLETE & COMPREHENSIVE
-**Total Coverage**: 86 pages across 12 files
+**Documentation Status**: ✅ COMPLETE & CONSOLIDATED
+**Total Coverage**: 90+ pages across 10 main docs + 2 test docs
 **Last Updated**: 2026-02-13
 **Quality**: Production Ready
+**Latest Changes**:
+- ✅ Fixed DM CSV-based path wildtype pseudo-mutant ordering bug
+- ✅ Added comprehensive wildtype pseudo-mutant documentation
+- ✅ Updated all guides with ddG calculation details
+- ✅ Updated CLAUDE.md with prepare_double_mut_df() ordering note

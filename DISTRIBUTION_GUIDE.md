@@ -407,3 +407,183 @@ The package is **ready for production distribution** via:
 **Version**: 0.2.1
 **Date**: 2026-02-13
 **Quality**: Production Ready
+
+---
+
+## Build History & Details
+
+**Last Build**: 2026-02-13
+**Version**: 0.2.1
+**Status**: ✅ Production Ready
+
+### Distributions Built
+
+**Wheel Distribution**:
+- File: `dist/residue_scanning-0.2.1-py3-none-any.whl`
+- Size: 17 KB
+- Format: Binary wheel (pre-compiled)
+- Install time: ~1 second
+- Python: 3.10+ (universal)
+- Platform: macOS (Intel/ARM), Linux
+
+**Source Distribution**:
+- File: `dist/residue_scanning-0.2.1.tar.gz`
+- Size: 16 KB
+- Format: Source tarball
+- Includes: Full source code, tests, documentation
+- Build time: ~30 seconds
+- Python: 3.10+ (requires build)
+
+### Build Configuration
+
+**Python Version**:
+- Required: Python 3.10+
+- Target: Python 3.10 (defined in pyproject.toml)
+- Environment: rosetta_RS conda environment
+
+**Dependencies (pip)**:
+```
+numpy>=1.20
+pandas
+scipy>=1.7
+biopython>=1.85
+blosc              # required for efficient PyRosetta pose pickling
+```
+
+**Note**: PyRosetta is conda-only (not on PyPI) and must be installed via `env.yaml`
+
+**Build Requirements**:
+```
+setuptools>=68
+wheel
+build
+```
+
+### Package Contents
+
+**Wheel Package Structure**:
+```
+residue_scanning-0.2.1.dist-info/
+├── METADATA              # Package metadata
+├── WHEEL                 # Wheel format info
+├── entry_points.txt      # CLI entry point
+├── top_level.txt         # Top-level packages
+└── RECORD                # File manifest
+
+residue_scanning/
+├── __init__.py           # Version string
+├── cli.py                # CLI orchestration (FR/RS/DM/CM)
+├── core.py               # PyRosetta + KDTree filter
+└── preprocessing.py      # PDB processing
+```
+
+**CLI Entry Point**:
+```
+residue-scan = "residue_scanning.cli:main"
+```
+
+After installation, the `residue-scan` command is available globally in the activated environment.
+
+### Building the Distributions
+
+**Prerequisites**:
+```bash
+micromamba activate rosetta_RS
+pip install build
+```
+
+**Build Both Wheel and Source**:
+```bash
+python -m build
+```
+
+Output:
+- `dist/residue_scanning-0.2.1-py3-none-any.whl`
+- `dist/residue_scanning-0.2.1.tar.gz`
+
+**Build Wheel Only**:
+```bash
+python -m build --wheel
+```
+
+**Build Source Only**:
+```bash
+python -m build --sdist
+```
+
+**Build Configuration File** (`pyproject.toml`):
+```toml
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "residue-scanning"
+version = "0.2.1"
+requires-python = ">=3.10"
+```
+
+### Quality Assurance
+
+**Pre-Build Checks**:
+Before building, ensure:
+- ✅ All tests pass: `pytest tests/ -v -m slow -s`
+- ✅ Linting passes: `ruff check residue_scanning/ tests/`
+- ✅ Types check: `mypy residue_scanning/`
+- ✅ Format correct: `black --check residue_scanning/ tests/`
+
+**Build Verification**:
+After building:
+```bash
+# List contents of wheel
+unzip -l dist/residue_scanning-0.2.1-py3-none-any.whl
+
+# Test installation
+pip install dist/residue_scanning-0.2.1-py3-none-any.whl
+residue-scan --help
+```
+
+### Distribution Timeline
+
+| Date | Version | Status | Event |
+|------|---------|--------|-------|
+| 2026-02-13 | 0.2.1 | ✅ Ready | Build, tests pass, wheel created |
+| 2026-02-13 | 0.2.1 | ✅ Ready | Documentation updated |
+| 2026-02-13 | 0.2.1 | ✅ Ready | KDTree Hybrid Filter finalized |
+
+### Troubleshooting Builds
+
+**Build Fails**:
+```bash
+# Clean previous builds
+rm -rf build/ dist/ *.egg-info residue_scanning.egg-info
+
+# Try again
+python -m build
+```
+
+**Installation Fails**:
+```bash
+# Ensure conda environment has PyRosetta
+conda list | grep pyrosetta
+
+# If missing, recreate environment
+micromamba env remove -n rosetta_RS
+micromamba env create -f env.yaml
+micromamba activate rosetta_RS
+
+# Try installation again
+pip install dist/*.whl
+```
+
+**CLI Not Found**:
+```bash
+# Ensure environment is activated
+micromamba activate rosetta_RS
+
+# Reinstall package
+pip install --force-reinstall dist/residue_scanning-0.2.1-py3-none-any.whl
+
+# Verify entry point
+pip show -f residue_scanning
+```

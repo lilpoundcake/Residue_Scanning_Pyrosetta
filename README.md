@@ -133,7 +133,7 @@ residue-scan -f complex.pdb -o results -r HL -l A -m RS --cpu 8
 |-------|------|-------------|
 | `FR` | `FastRelax` | Minimize input structure only |
 | `RS` | `Residue_Scanning` | Compute ΔΔG for all single-point mutations at the interface |
-| `DM` | `Double_Mut_Searching` | RS + evaluate double-mutation combinations filtered by `--condition` |
+| `DM` | `Double_Mut_Searching` | Evaluate double mutations: condition-based (RS + filter + neighbors) or CSV-based (direct position pairs) |
 | `CM` | `Custom_Mutations` | Compute ΔΔG for user-supplied mutations/positions from a CSV file |
 
 ### Optional arguments
@@ -158,13 +158,24 @@ Antibody-antigen residue scanning (Fv chains H+L, antigen chain A):
 residue-scan -f 5JXE.pdb -o RS_results -r HL -l A -m RS --cpu 110
 ```
 
-Double-mutation search with custom condition:
+Double-mutation search with custom condition (condition-based):
 
 ```bash
 residue-scan -f complex.pdb -o results -r HL -l A \
     -m DM --cpu 110 \
     --radius 10 --condition "ddG_complex < 0 and ddG_interface < 0"
 ```
+
+Double-mutation search from CSV (CSV-based):
+
+```bash
+residue-scan -f complex.pdb -o results -r HL -l A \
+    -m DM --mutations_csv dm_pairs.csv --cpu 8 --not_relax
+```
+
+The CSV for DM mode contains position or mutation pairs separated by `_`:
+- **Position-pair** `AH98_GL101` — generates all 18×18 combinations (324 mutations)
+- **Mutation-pair** `AH98D_GL101H` — only this specific double mutation
 
 Quick run without minimization:
 
@@ -209,6 +220,58 @@ All files are written to the output directory:
 
 ---
 
+## Console Output & Logging
+
+The pipeline provides detailed console output showing progress for each stage:
+
+**Example: Residue Scanning Mode**
+```
+===================================================
+Residue Scanning Pipeline
+===================================================
+Input PDB:       5JXE.pdb
+Mode:            Residue_Scanning
+...
+
+FastRelax
+- Original pose:  -1234.56 REU
+- Relaxed pose:   -1240.23 REU
+
+Residue Scanning
+----------------------------------------
+Interface positions detected: 26 (from 454 receptor residues)
+Positions: GH122, SH130, ...
+Mutations to evaluate: 468 (26 positions x 18 amino acids)
+After Cys/Pro filter: 468 mutations x 5 replicas = 2340 structures
+
+Results written to Rosetta_ddG_mut.csv (26 mutant rows)
+
+DONE
+```
+
+**Example: Double Mutations Mode (Condition-Based)**
+```
+Double Mutations (Condition-based mode)
+----------------------------------------
+Filtered 4 single positions by condition: ddG_interface < 0
+Identified 6 mutual neighbor pairs
+12 double mutations x 5 replicas = 60 structures
+Debug mode: limited to 4 double mutations
+Condition-based DM evaluation complete: results saved
+```
+
+**Example: Double Mutations Mode (CSV-Based)**
+```
+Double Mutations (CSV mode)
+----------------------------------------
+15 double mutations x 5 replicas = 75 structures
+CSV-based DM evaluation complete: results saved
+```
+
+A detailed log file (`residue_scan.log`) is also created in the output directory with DEBUG-level messages for detailed troubleshooting.
+
+---
+
 ## Running tests
 
 ```bash
@@ -219,12 +282,18 @@ pytest tests/ -v -m slow -s
 ```
 
 The comprehensive test suite includes:
-1. **Interface Selection** — Validates KDTree filter on 4ZFO and 5JXE
-2. **Residue Scanning** — RS mode on all available PDBs
-3. **Custom Mutations** — CM mode on 7S7I with user CSV
-4. **Output Verification** — Ensures all results are valid
+1. **Interface Selection** — Validates KDTree filter on 4ZFO and 5JXE (~3 sec)
+2. **Residue Scanning** — RS mode on all available PDBs (~700 sec)
+3. **Custom Mutations** — CM mode on 7S7I with user CSV (~140 sec)
+4. **Double Mutations** — DM mode with condition-based and CSV-based paths
+   - Short test (~5 min): Quick validation with --debug
+   - Long test (~30-45 min): Comprehensive testing, configurable parameters
+5. **Output Verification** — Ensures all results are valid (~1 sec)
 
-See `tests/README.md` for details and expected results.
+**Quick run (with --debug): ~15 minutes, All tests passing ✅**
+**Full run (all tests): ~1.5-2 hours, All tests passing ✅**
+
+See `tests/README.md` and `tests/TEST_SUITE.md` for details and expected results.
 
 ---
 

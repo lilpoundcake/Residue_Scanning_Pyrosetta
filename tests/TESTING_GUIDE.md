@@ -72,7 +72,9 @@ tests/
 | 1 | Interface Selection | ~3s | KDTree geometry filter | ✅ PASSED |
 | 2 | Residue Scanning | ~700s | Full ΔΔG pipeline | ✅ PASSED |
 | 3 | Custom Mutations | ~140s | User CSV mutations | ✅ PASSED |
-| 4 | Output Verification | ~1s | File integrity | ✅ PASSED |
+| 4a | Double Mutations (Short) | ~5m | DM mode with --debug | ✅ PASSED |
+| 4b | Double Mutations (Long) | ~30-45m | DM mode comprehensive | ✅ PASSED |
+| 5 | Output Verification | ~1s | File integrity | ✅ PASSED |
 
 ---
 
@@ -302,7 +304,171 @@ tests/results/custom_csv/
 
 ---
 
-## Test 4: Output Verification
+## Test 4: Double Mutations (DM Mode)
+
+**Test Functions**:
+- `test_double_mutations_7s7i_short()` — Quick validation (~5 minutes)
+- `test_double_mutations_7s7i_long(cpu="4", debug=False, not_relax=True)` — Comprehensive (~30-45 minutes)
+**Markers**: `@pytest.mark.slow`
+
+### What it does
+
+Double Mutation (DM) mode evaluates double mutations between residue pairs:
+1. **Condition-Based Path**: Runs RS, filters by condition, finds neighbors, evaluates combinations
+2. **CSV-Based Path**: Reads position pairs from CSV, generates combinations, evaluates directly
+
+### Commands
+
+**Short Test (Quick Validation)**
+```bash
+pytest tests/test_comprehensive.py::test_double_mutations_7s7i_short -v -m slow -s
+```
+- Uses: `--debug --not_relax --cpu 2`
+- Duration: ~5 minutes
+
+**Long Test (Comprehensive)**
+```bash
+# With default parameters (all mutations, no FastRelax)
+pytest tests/test_comprehensive.py::test_double_mutations_7s7i_long -v -m slow -s
+
+# With custom parameters (debug mode for faster testing)
+pytest tests/test_comprehensive.py::test_double_mutations_7s7i_long[4-True-True] -v -m slow -s
+```
+- Default: `--cpu 4 --not_relax` (no --debug)
+- Duration: ~30-45 minutes (or ~5 min with debug=True)
+
+### Full Command with Args
+
+```bash
+residue-scan -f complex.pdb -r HL -l A -m DM \
+    --condition "ddG_interface < 0" \
+    --cpu 4 --not_relax --debug \
+    -o results/double_mut/
+```
+
+### Processing Details (7S7I with --debug)
+
+```
+Step 1: Residue Scanning
+  Interface positions: ~4 (debug mode)
+  Mutations per position: 18 AA
+  Total single mutations: ~72
+
+Step 2: Filter by Condition
+  Condition: ddG_interface < 0
+  Passing mutations: ~20-30 (estimated)
+
+Step 3: Double Mutation Search
+  Neighbor pairs: ~40-60 (estimated)
+  Double mutations to evaluate: ~150-200
+  Replicas per mutation: 5
+  Total structures: ~750-1000
+
+Step 4: Results
+  Total double mutations in CSV: ~50-100
+```
+
+### Console Logging Output
+
+**Condition-Based DM Mode**:
+```
+Double Mutations (Condition-based mode)
+----------------------------------------
+Filtered 4 single positions by condition: ddG_interface < 0
+Identified 6 mutual neighbor pairs
+12 double mutations x 5 replicas = 60 structures
+Debug mode: limited to 4 double mutations
+Condition-based DM evaluation complete: results saved
+```
+
+**CSV-Based DM Mode** (if using --mutations_csv):
+```
+Double Mutations (CSV mode)
+----------------------------------------
+15 double mutations x 5 replicas = 75 structures
+Debug mode: limited to 4 double mutations
+CSV-based DM evaluation complete: results saved
+```
+
+The log file (`residue_scan.log`) contains detailed execution logs at DEBUG level, including:
+- Interface residue detection
+- Position filtering details
+- Neighbor discovery statistics
+- Mutation generation info
+- Energy calculation progress
+
+### Output
+
+```
+tests/results/double_mut/
+├── FastRelax.pdb              # Relaxed structure
+├── Rosetta_results_REU.csv    # All replica energies
+├── Rosetta_ddG_mut.csv        # Single mutation results (intermediate)
+├── Rosetta_ddG_mut_double.csv # Double mutation results
+├── all_REU_pdb/               # All evaluated PDB structures
+├── min_REU_pdb/               # Minimum energy structures
+└── residue_scan.log           # Detailed execution log
+```
+
+### ΔΔG Calculation
+
+Double mutation ΔΔG values are calculated using automatically-generated wildtype pseudo-mutants:
+
+```
+For double mutation "SL30A_SL31D":
+  Wildtype pseudo-mutant: "SL30S_SL31S" (identity mutations)
+  ddG = energy(SL30A_SL31D) - energy(SL30S_SL31S)
+```
+
+- Each unique position pair gets exactly one wildtype pseudo-mutant
+- Wildtype rows are created automatically, evaluated with identical FastRelax protocol
+- Wildtype rows are **filtered out** of final CSV (only mutations shown)
+- This ensures correct synergistic effect measurement
+
+### CSV Columns
+
+```
+Name                   # Double mutation ID (e.g., "GH122AL_SH130T")
+REU_min                # Minimum Rosetta energy (REU)
+ddG_complex            # ΔΔG for complex (energy difference from wildtype)
+ddG_interface          # ΔΔG at interface (energy difference from wildtype)
+```
+
+### Double Mutation Name Format
+
+```
+[From_AA][Chain][Position][Insertion?][To_AA]_[From_AA][Chain][Position][Insertion?][To_AA]
+
+Examples:
+  GH122AL_SH130T       # G→A at H122, S→T at H130
+  YH50W_EH51D         # Y→W at H50, E→D at H51
+  SL31I_NL32Y         # S→I at L31, N→Y at L32
+```
+
+### Expected Results
+
+- Double mutation CSV with 50-100 entries (debug mode)
+- Names formatted as "XXX_YYY" (two mutations separated by underscore)
+- ddG values showing energy changes for double mutations
+- FastRelax.pdb with relaxed structure
+
+### Performance
+
+```
+~5 minutes total with:
+  - 4 CPU cores
+  - --not_relax (no cartesian minimization)
+  - --debug (limited to 4 positions)
+
+Scales linearly with:
+  - Number of interface positions
+  - Number of neighbor pairs
+  - Number of CPUs available
+```
+
+---
+
+## Test 5: Output Verification
 
 **Duration**: ~0.4-1 second
 **Markers**: `@pytest.mark.slow`

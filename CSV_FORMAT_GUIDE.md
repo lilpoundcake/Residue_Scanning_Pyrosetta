@@ -1,6 +1,6 @@
-# CSV Format Guide for Custom Mutations
+# CSV Format Guide for Custom & Double Mutations
 
-Complete guide to creating `input_csv.csv` for Custom Mutations (CM) mode.
+Complete guide to creating CSV files for Custom Mutations (CM) mode and Double Mutations (DM) mode.
 
 ## Quick Reference
 
@@ -408,4 +408,234 @@ WARNING: skipping unrecognized entry at line 2: 'F100b'
 
 ## Questions?
 
-See `TESTING_GUIDE.md` for more information on running tests and interpreting results.
+See `tests/TEST_SUITE.md` for more information on running tests and interpreting results.
+
+---
+
+## Double Mutations Mode (DM) CSV Format ✨
+
+### Overview
+
+Double Mutations mode can accept CSV input with two position-pair or mutation-pair formats:
+
+| Want | Format | Example | Generates |
+|------|--------|---------|-----------|
+| All combinations at two positions | Position pair | `AH98_GL101` | 18×18 = 324 mutations |
+| Specific double mutation | Mutation pair | `AH98D_GL101H` | 1 mutation |
+| Mixed (position + mutation) | Mixed | `AH98_GL101H` or `AH98D_GL101` | 18 or 1 mutations |
+
+### Format Specification
+
+```
+{FIRST_PART}_{SECOND_PART}
+```
+
+Each part follows the same format as Custom Mutations (CM):
+- **Position spec**: `{FROM_AA}{CHAIN}{POSITION}` or `{FROM_AA}{CHAIN}{POSITION}{INSERTION_CODE}`
+- **Mutation**: `{FROM_AA}{CHAIN}{POSITION}{TO_AA}` or `{FROM_AA}{CHAIN}{POSITION}{INSERTION_CODE}{TO_AA}`
+
+### Examples
+
+**Position-Pair** (generates all 18×18 combinations):
+```csv
+AH98_GL101         # All mutations at both positions
+YH52_SL31          # Different chains and positions
+FH100A_GH99        # One with insertion code, one without
+```
+
+**Specific Mutation-Pair** (only these mutations):
+```csv
+AH98D_GL101H       # A→D at H98 + G→H at L101
+YH52AD_SL31W       # Y→D at H52A + S→W at L31
+```
+
+**Mixed**:
+```csv
+AH98_GL101H        # All 18 at H98 + G→H at L101 only
+AH98D_GL101        # A→D at H98 + all 18 at L101
+```
+
+### Real Example: 7S7I.pdb
+
+```csv
+SL30_SL31          # Position pair: generate 18×18=324 combinations
+RH53D_RH55K        # Specific pair: only this double mutation
+```
+
+Processing:
+- `SL30_SL31` → SL30A_SL31A, SL30A_SL31D, ..., SL30S_SL31S (324 double mutations)
+- `RH53D_RH55K` → 1 double mutation (R→D at H53, R→K at H55)
+
+**Wildtype Pseudo-Mutants (Auto-Generated)**:
+- For each unique position pair, one wildtype pseudo-mutant is automatically created
+- Example: For `SL30_SL31`, the wildtype pair `SL30S_SL31S` is added (S→S, S→S, i.e., no change)
+- Each position's wildtype component uses its original amino acid
+- All rows (mutations + wildtypes) are evaluated with identical FastRelax protocol
+- Wildtype rows provide reference energy for ΔΔG calculation: `ddG = mutant_energy - wildtype_energy`
+- Wildtype rows are evaluated in parallel and **filtered out** of final CSV output (only mutations shown)
+
+### Usage
+
+**Run DM mode with CSV input**:
+```bash
+residue-scan -f complex.pdb -o results -r HL -l A -m DM \
+    --mutations_csv input.csv --cpu 4
+```
+
+This skips Residue Scanning and evaluates double mutations directly from your CSV.
+
+### Validation
+
+Same as Custom Mutations mode:
+- `from_aa` must match actual residue in pose
+- Insertion codes must be UPPERCASE
+- Positions must exist in PDB
+
+---
+
+## Advanced: CSV Ambiguity Resolution
+
+### The Ambiguity Problem
+
+When a CSV entry has a single trailing character that is a valid amino acid (e.g., `GH100A`), it creates an ambiguity:
+
+```
+GH100A could mean:
+  1. MUTATION:     G→A at position H100 (no insertion code)
+  2. POSITION SPEC: All 18 mutations at position H100A (insertion code = A)
+```
+
+### Real Example: 7S7I.pdb
+
+In the 7S7I PDB file, both positions might exist:
+- **Position H100** (no insertion code)
+- **Position H100A** (with insertion code A)
+
+The CSV entry `GH100A` is ambiguous - which position should be mutated?
+
+### Solution: Dual-Variant Logic
+
+When the parser encounters an ambiguous entry, it:
+
+1. **Checks both interpretations** in the PDB:
+   - Does position H100 exist with the specified from_aa (G)?
+   - Does position H100A exist with the specified from_aa (G)?
+
+2. **Processes based on existence**:
+   - **Both exist**: Generates mutations for BOTH positions (no data loss)
+   - **Only mutation exists**: Treats as mutation (G→A at H100)
+   - **Only position spec exists**: Treats as position spec (all mutations at H100A)
+   - **Neither exists**: Skips with warning
+
+3. **Reports ambiguities**:
+   - Logs each detected ambiguity with interpretation chosen
+   - Writes detailed report to `CSV_AMBIGUITIES.txt`
+   - Ensures transparency about what was processed
+
+### Example Walkthrough
+
+**Input CSV**:
+```
+GH100A
+YH52AD
+SL31
+```
+
+**PDB Content (7S7I)**:
+- Position H100 exists with Glycine (G)
+- Position H100A exists with Glycine (G)
+- Position H52A exists with Tyrosine (Y)
+- Position L31 exists with Serine (S)
+
+**Processing**:
+
+**Entry 1: `GH100A`**
+```
+Parsing: from_aa='G', chain='H', number=100, trailing='A'
+Trailing is 1 char and 'A' is valid AA → AMBIGUOUS
+
+Check mutation (G→A at H100):  ✓ H100 exists with G
+Check position spec (all at H100A): ✓ H100A exists with G
+
+BOTH VALID → Generate both:
+  - GH100A (mutation G→A at H100)
+  - GH100AA, GH100AD, ... (all 18 at H100A)
+```
+
+**Entry 2: `YH52AD`**
+```
+Parsing: from_aa='Y', chain='H', number=52, trailing='AD'
+Trailing is 2 chars → insertion_code='A', to_aa='D'
+
+Specific mutation: Y→D at H52A
+Generate: YH52AD (only)
+```
+
+**Entry 3: `SL31`**
+```
+Parsing: from_aa='S', chain='L', number=31, trailing=''
+Trailing is empty → position spec, all 18 AA
+
+Generate: SL31A, SL31D, ..., SL31W (18 mutations)
+```
+
+### Output Files
+
+**Main Output**:
+- `Rosetta_ddG_mut.csv` — Standard mutation results
+
+**Ambiguity Report** (if applicable):
+- `CSV_AMBIGUITIES.txt` — Detailed ambiguity information
+  - Lists each detected ambiguity
+  - Explains interpretation chosen
+  - Provides explanation of disambiguation logic
+
+**Console Output** (if ambiguity detected):
+```
+ℹ️  AMBIGUITY DETECTED in 'GH100A': Both mutation (G→A at H100) and
+    position spec (all mutations at H100A) exist in PDB. Processing BOTH.
+```
+
+### Decision Tree
+
+```
+CSV Entry: [from_aa][chain][number][trailing]
+           ↓
+Is trailing character count?
+├─ 0 chars  → Position spec (all 18)
+├─ 1 char   → Is it a valid AA?
+│   ├─ YES  → AMBIGUOUS (check both interpretations)
+│   │   ├─ Both exist    → Generate BOTH
+│   │   ├─ Mutation only → Generate mutation
+│   │   ├─ Position only → Generate position spec
+│   │   └─ Neither       → Skip
+│   └─ NO   → Insertion code, position spec (all 18)
+├─ 2 chars  → First=insertion_code, Second=to_aa (specific mutation)
+└─ 3+ chars → Error, skip
+```
+
+### Backward Compatibility
+
+**✅ Fully Backward Compatible**:
+- Existing CSV files work unchanged
+- Non-ambiguous entries unaffected
+- DataFrame structure identical
+- Ambiguity handling is automatic and transparent
+
+### Migration Guide
+
+**No action required**. The ambiguity handling is transparent:
+- Non-ambiguous entries work exactly as before
+- Ambiguous entries now process BOTH variants (more complete)
+- Detailed report explains any changes
+
+**Recommendation for New Users**: Use explicit format to avoid ambiguity:
+```csv
+# Good: Unambiguous
+GH100    # Position spec (no insertion code)
+GH100D   # Specific mutation (insertion code + AA)
+YH52AD   # Specific mutation with insertion code
+
+# Ambiguous (but now handled correctly)
+GH100A   # Could be both, parser handles it
+```

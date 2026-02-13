@@ -1,0 +1,2997 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.10.19, pytest-9.0.2, pluggy-1.6.0 -- /Users/lilpoundcake/micromamba/envs/rosetta_RS/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+tests/test_comprehensive.py::test_double_mutations_7s7i_short ============================================================
+Residue Scanning Pipeline
+============================================================
+Input PDB:       /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/pdbs/7S7I.pdb
+Output dir:      /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based
+Mode:            Double_Mut_Searching
+Receptor chains: HL
+Ligand chains:   A
+CPUs:            8
+Replicas:        5
+Radius:          8.0 A
+Scoring:         ref2015 (--not_relax)
+Debug mode:      ON
+DM condition:    ddG_interface < 0
+============================================================
+Input structure:  466.16 REU
+
+============================================================
+Testing DM mode (condition-based SHORT) on 7S7I.pdb
+============================================================
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step mutate_pose_FR: /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based/clear.pdb False
+Seed is 6331508
+Step repack_and_minimize: /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based/clear.pdb
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step mutate_pose_FR: /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based/clear.pdb False
+Seed is 9900038
+Step repack_and_minimize: /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based/clear.pdb
+
+FastRelax: clear_4.pdb has the smallest REU
+  Original pose:  466.16 REU
+  Relaxed pose:   -451.55 REU
+
+Residue Scanning
+----------------------------------------
+Interface positions detected: 20 (from 226 receptor residues, cutoff=8.0 A)
+Positions: TH31, SH33, YH50, SH52, YH52A, RH53, RH55, TH56, YH58, WH95, YH97, GH98, GH100, SL28, SL30, SL31, YL32, YL91, GL92, FL96
+Mutations to evaluate: 360 (20 positions x 18 amino acids)
+After Cys/Pro filter: 360 mutations x 5 replicas = 1800 structures
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31A
+Seed is 2712977
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31A
+Step mutate_pose_FR: FastRelax.pdb TH31A
+Seed is 5792224
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31A
+Step mutate_pose_FR: FastRelax.pdb TH31A
+Seed is 6936492
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31A
+Step mutate_pose_FR: FastRelax.pdb TH31A
+Seed is 6836321
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31A
+Step mutate_pose_FR: FastRelax.pdb TH31A
+Seed is 8140904
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31A
+TH31A [-453.85038456965924, -453.85038456965924, -453.85038456965924, -453.85038456965924, -453.85038456965924, -29.569054945638584, -29.569054945638584, -29.569054945638584, -29.569054945638584, -29.569054945638584]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31D
+Seed is 4549881
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31D
+Step mutate_pose_FR: FastRelax.pdb TH31D
+Seed is 9464392
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31D
+Step mutate_pose_FR: FastRelax.pdb TH31D
+Seed is 564071
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31D
+Step mutate_pose_FR: FastRelax.pdb TH31D
+Seed is 7460889
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31D
+Step mutate_pose_FR: FastRelax.pdb TH31D
+Seed is 4911551
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31D
+TH31D [-452.5092181993703, -452.5092181993703, -452.5092181993703, -452.5092181993703, -452.5092181993703, -29.513256498139242, -29.513256498139242, -29.513256498139242, -29.51325649814106, -29.51325649814106]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E
+Seed is 1736263
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate_pose_FR: FastRelax.pdb TH31E
+Seed is 4200907
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate_pose_FR: FastRelax.pdb TH31E
+Seed is 8794389
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate_pose_FR: FastRelax.pdb TH31E
+Seed is 2129778
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate_pose_FR: FastRelax.pdb TH31E
+Seed is 8498897
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+TH31E [-449.8076246048237, -449.8076246048237, -449.8076246048237, -449.8076246048237, -449.8076246048237, -29.83280713297046, -29.832807132970686, -30.45323316549087, -29.83280713297046, -29.83280713297046]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31F
+Seed is 5557190
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31F
+Step mutate_pose_FR: FastRelax.pdb TH31F
+Seed is 630040
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31F
+Step mutate_pose_FR: FastRelax.pdb TH31F
+Seed is 3325968
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31F
+Step mutate_pose_FR: FastRelax.pdb TH31F
+Seed is 9406721
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31F
+Step mutate_pose_FR: FastRelax.pdb TH31F
+Seed is 4134101
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31F
+TH31F [-342.4457611166748, -342.4457611166748, -342.4457611166748, -342.4457611166748, -342.4457611166748, -29.495855176647922, -29.485283163299925, -29.48528316338826, -29.48528316338826, -29.485283163299925]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G
+Seed is 733460
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate_pose_FR: FastRelax.pdb TH31G
+Seed is 5555896
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate_pose_FR: FastRelax.pdb TH31G
+Seed is 8519362
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate_pose_FR: FastRelax.pdb TH31G
+Seed is 5046458
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate_pose_FR: FastRelax.pdb TH31G
+Seed is 5043663
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+TH31G [-451.87945629836463, -451.87945629836463, -451.87945629836463, -451.87945629836463, -451.87945629836463, -35.337843155952044, -29.624893740365167, -29.635465753713163, -29.624893740365167, -29.635465753713163]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31H
+Seed is 565372
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31H
+Step mutate_pose_FR: FastRelax.pdb TH31H
+Seed is 1302098
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31H
+Step mutate_pose_FR: FastRelax.pdb TH31H
+Seed is 1151707
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31H
+Step mutate_pose_FR: FastRelax.pdb TH31H
+Seed is 8696437
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31H
+Step mutate_pose_FR: FastRelax.pdb TH31H
+Seed is 6560390
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31H
+TH31H [-448.8198517349557, -448.8198517349557, -448.1679871766713, -448.8198517349557, -448.8198517349557, -29.385606879337786, -29.38560687933699, -35.11923310265155, -29.385606879337786, -29.385606879337786]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31I
+Seed is 3878240
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31I
+Step mutate_pose_FR: FastRelax.pdb TH31I
+Seed is 1229832
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31I
+Step mutate_pose_FR: FastRelax.pdb TH31I
+Seed is 2351983
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31I
+Step mutate_pose_FR: FastRelax.pdb TH31I
+Seed is 6042412
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31I
+Step mutate_pose_FR: FastRelax.pdb TH31I
+Seed is 3661974
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31I
+TH31I [-394.3655440521309, -394.3655440521309, -394.3655440521309, -394.3655440521309, -394.3655440521309, -29.478492006510294, -29.46791999317196, -30.21881178576365, -29.467919993159228, -29.46791999317196]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31K
+Seed is 774441
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31K
+Step mutate_pose_FR: FastRelax.pdb TH31K
+Seed is 8706049
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31K
+Step mutate_pose_FR: FastRelax.pdb TH31K
+Seed is 501486
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31K
+Step mutate_pose_FR: FastRelax.pdb TH31K
+Seed is 3783723
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31K
+Step mutate_pose_FR: FastRelax.pdb TH31K
+Seed is 224255
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31K
+TH31K [-450.27019010012174, -450.27019010012174, -450.27019010012174, -450.27019010012174, -450.27019010012174, -29.3847067406237, -29.3847067406237, -29.3847067406237, -29.3847067406237, -29.3847067406237]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31L
+Seed is 4010917
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31L
+Step mutate_pose_FR: FastRelax.pdb TH31L
+Seed is 4208714
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31L
+Step mutate_pose_FR: FastRelax.pdb TH31L
+Seed is 5438816
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31L
+Step mutate_pose_FR: FastRelax.pdb TH31L
+Seed is 4152576
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31L
+Step mutate_pose_FR: FastRelax.pdb TH31L
+Seed is 4523119
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31L
+TH31L [-415.63179257484717, -415.63179257484717, -415.63179257484717, -415.63179257484717, -415.63179257484717, -29.500939680781073, -29.50093968077266, -29.500939680781073, -29.50093968077266, -30.251831473375944]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31M
+Seed is 9236563
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31M
+Step mutate_pose_FR: FastRelax.pdb TH31M
+Seed is 5232209
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31M
+Step mutate_pose_FR: FastRelax.pdb TH31M
+Seed is 801938
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31M
+Step mutate_pose_FR: FastRelax.pdb TH31M
+Seed is 6004041
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31M
+Step mutate_pose_FR: FastRelax.pdb TH31M
+Seed is 3110053
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31M
+TH31M [-449.11840397827706, -449.11840397827706, -449.11840397827706, -449.11840397827706, -449.11840397827706, -29.762067584971362, -29.762067584971362, -29.762067584971362, -29.77263959831936, -30.53441566842065]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31N
+Seed is 7765815
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31N
+Step mutate_pose_FR: FastRelax.pdb TH31N
+Seed is 5863101
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31N
+Step mutate_pose_FR: FastRelax.pdb TH31N
+Seed is 5629212
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31N
+Step mutate_pose_FR: FastRelax.pdb TH31N
+Seed is 3838738
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31N
+Step mutate_pose_FR: FastRelax.pdb TH31N
+Seed is 5176609
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31N
+TH31N [-447.8052342328294, -447.8052342328294, -447.8052342328294, -447.8052342328294, -447.8052342328294, -29.514512732922583, -29.514512732920764, -29.514512732922583, -29.514512732920764, -30.28137346642967]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Q
+Seed is 4682178
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Q
+Step mutate_pose_FR: FastRelax.pdb TH31Q
+Seed is 4994642
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Q
+Step mutate_pose_FR: FastRelax.pdb TH31Q
+Seed is 3467523
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Q
+Step mutate_pose_FR: FastRelax.pdb TH31Q
+Seed is 6445803
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Q
+Step mutate_pose_FR: FastRelax.pdb TH31Q
+Seed is 7650907
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Q
+TH31Q [-451.49476390081105, -451.49476390081105, -451.49476390081105, -451.49476390081105, -451.49476390081105, -29.56716258898615, -29.56716258899013, -29.56716258898615, -29.56716258899013, -29.56716258899013]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31R
+Seed is 7813869
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31R
+Step mutate_pose_FR: FastRelax.pdb TH31R
+Seed is 5195843
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31R
+Step mutate_pose_FR: FastRelax.pdb TH31R
+Seed is 7189619
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31R
+Step mutate_pose_FR: FastRelax.pdb TH31R
+Seed is 3223773
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31R
+Step mutate_pose_FR: FastRelax.pdb TH31R
+Seed is 3786387
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31R
+TH31R [-449.1769354324074, -449.1769354324074, -449.1769354324074, -449.1769354324074, -449.1769354324074, -29.064829117997363, -29.07540113134536, -29.07540113134536, -29.064829117997363, -28.836244693688457]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31S
+Seed is 1437905
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31S
+Step mutate_pose_FR: FastRelax.pdb TH31S
+Seed is 5196178
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31S
+Step mutate_pose_FR: FastRelax.pdb TH31S
+Seed is 8310685
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31S
+Step mutate_pose_FR: FastRelax.pdb TH31S
+Seed is 8436056
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31S
+Step mutate_pose_FR: FastRelax.pdb TH31S
+Seed is 2675667
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31S
+TH31S [-453.4501513355846, -453.4501513355846, -453.4501513355846, -453.4501513355846, -453.4501513355846, -29.39022685701326, -29.390226857013147, -29.400798870361257, -29.390226857013147, -29.39022685701326]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31T
+Seed is 5697444
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31T
+Step mutate_pose_FR: FastRelax.pdb TH31T
+Seed is 8812478
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31T
+Step mutate_pose_FR: FastRelax.pdb TH31T
+Seed is 4062993
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31T
+Step mutate_pose_FR: FastRelax.pdb TH31T
+Seed is 4918183
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31T
+Step mutate_pose_FR: FastRelax.pdb TH31T
+Seed is 3047238
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31T
+TH31T [-451.36792951027894, -451.36792951027894, -451.36792951027894, -451.36792951027894, -451.36792951027894, -29.533936117406768, -29.533936117406768, -29.544508130754764, -34.50656563002423, -29.544508130754764]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y
+Seed is 8961604
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate_pose_FR: FastRelax.pdb TH31Y
+Seed is 9440411
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate_pose_FR: FastRelax.pdb TH31Y
+Seed is 5272350
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate_pose_FR: FastRelax.pdb TH31Y
+Seed is 2460783
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate_pose_FR: FastRelax.pdb TH31Y
+Seed is 2611422
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+TH31Y [-361.7420541451793, -361.7420541451793, -361.7420541451793, -361.7420541451793, -361.7420541451793, -30.29269444086043, -29.52139124103377, -30.387662237346092, -29.531963254379605, -29.52139124103161]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V
+Seed is 5960635
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate_pose_FR: FastRelax.pdb TH31V
+Seed is 150260
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate_pose_FR: FastRelax.pdb TH31V
+Seed is 2252131
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate_pose_FR: FastRelax.pdb TH31V
+Seed is 1657738
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate_pose_FR: FastRelax.pdb TH31V
+Seed is 9504925
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+TH31V [-343.30930668276346, -343.30930668276346, -343.30930668276346, -343.30930668276346, -343.30930668276346, -29.77188319888984, -29.78245521224227, -29.771883198894272, -29.77188319888984, -29.771883198894272]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31W
+Seed is 7766206
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31W
+Step mutate_pose_FR: FastRelax.pdb TH31W
+Seed is 8377581
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31W
+Step mutate_pose_FR: FastRelax.pdb TH31W
+Seed is 6515589
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31W
+Step mutate_pose_FR: FastRelax.pdb TH31W
+Seed is 1300282
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31W
+Step mutate_pose_FR: FastRelax.pdb TH31W
+Seed is 948434
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31W
+TH31W [-441.6472572360106, -441.6472572360106, -441.6472572360106, -441.6472572360106, -441.6472572360106, -29.49217139603587, -29.48159938268583, -29.48159938268583, -29.48159938268992, -30.298717913798043]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52A
+Seed is 7850934
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52A
+Step mutate_pose_FR: FastRelax.pdb SH52A
+Seed is 8650805
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52A
+Step mutate_pose_FR: FastRelax.pdb SH52A
+Seed is 4723408
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52A
+Step mutate_pose_FR: FastRelax.pdb SH52A
+Seed is 4605487
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52A
+Step mutate_pose_FR: FastRelax.pdb SH52A
+Seed is 6931801
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52A
+SH52A [-449.6686535605487, -449.6686535605487, -449.6686535605487, -449.6686535605487, -449.6686535605487, -29.932578147950267, -29.971535052328136, -29.971535052328363, -29.93257814795004, -30.70375387230547]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52D
+Seed is 9783340
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52D
+Step mutate_pose_FR: FastRelax.pdb SH52D
+Seed is 2992710
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52D
+Step mutate_pose_FR: FastRelax.pdb SH52D
+Seed is 803185
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52D
+Step mutate_pose_FR: FastRelax.pdb SH52D
+Seed is 4685463
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52D
+Step mutate_pose_FR: FastRelax.pdb SH52D
+Seed is 6998613
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52D
+SH52D [-446.6542062969772, -446.6542062969772, -446.6542062969772, -446.6542062969772, -446.6542062969772, -27.902546903146686, -28.218284762894882, -27.807579106662843, -28.218284762894655, -27.902546903146458]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52E
+Seed is 5595655
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52E
+Step mutate_pose_FR: FastRelax.pdb SH52E
+Seed is 6856406
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52E
+Step mutate_pose_FR: FastRelax.pdb SH52E
+Seed is 1949845
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52E
+Step mutate_pose_FR: FastRelax.pdb SH52E
+Seed is 6707956
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52E
+Step mutate_pose_FR: FastRelax.pdb SH52E
+Seed is 544832
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52E
+SH52E [-434.14839024845713, -425.62461001387345, -434.14839024845713, -434.14839024845713, -436.2475757239375, -16.750315123374946, -23.49149456391592, -16.739743110027064, -16.739743110026836, -19.862697984884733]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52F
+Seed is 2169117
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52F
+Step mutate_pose_FR: FastRelax.pdb SH52F
+Seed is 8364661
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52F
+Step mutate_pose_FR: FastRelax.pdb SH52F
+Seed is 5057417
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52F
+Step mutate_pose_FR: FastRelax.pdb SH52F
+Seed is 7460034
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52F
+Step mutate_pose_FR: FastRelax.pdb SH52F
+Seed is 132201
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52F
+SH52F [-396.3604118825819, -396.3604118825819, -396.3604118825819, -396.3604118825819, -387.7353662419262, -15.601036466157439, -15.601036466170854, -20.483280883672137, -15.601036466157211, -7.070958621985596]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52G
+Seed is 5188721
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52G
+Step mutate_pose_FR: FastRelax.pdb SH52G
+Seed is 761538
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52G
+Step mutate_pose_FR: FastRelax.pdb SH52G
+Seed is 3876148
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52G
+Step mutate_pose_FR: FastRelax.pdb SH52G
+Seed is 9547505
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52G
+Step mutate_pose_FR: FastRelax.pdb SH52G
+Seed is 5080733
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52G
+SH52G [-447.2281515345095, -447.2281515345095, -447.2281515345095, -447.2281515345095, -447.2281515345095, -29.41773443743756, -29.407162424089563, -29.407162424089904, -29.407162424088426, -29.41773443743665]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52H
+Seed is 4587372
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52H
+Step mutate_pose_FR: FastRelax.pdb SH52H
+Seed is 9070750
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52H
+Step mutate_pose_FR: FastRelax.pdb SH52H
+Seed is 8692481
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52H
+Step mutate_pose_FR: FastRelax.pdb SH52H
+Seed is 820564
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52H
+Step mutate_pose_FR: FastRelax.pdb SH52H
+Seed is 5440891
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52H
+SH52H [-402.50849672982457, -412.550122512247, -411.69625860122204, -411.69625860122204, -412.550122512247, -17.68108700734689, -15.684294984021278, -9.86425630145419, -9.874828314802528, -10.718120212478368]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52I
+Seed is 57156
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52I
+Step mutate_pose_FR: FastRelax.pdb SH52I
+Seed is 1342598
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52I
+Step mutate_pose_FR: FastRelax.pdb SH52I
+Seed is 3057544
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52I
+Step mutate_pose_FR: FastRelax.pdb SH52I
+Seed is 7985457
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52I
+Step mutate_pose_FR: FastRelax.pdb SH52I
+Seed is 8537561
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52I
+SH52I [-432.86861321504574, -435.4031321218542, -432.86861321504574, -435.4031321218542, -432.86861321504574, -18.37161778454856, -21.001104487840507, -18.371617784547084, -20.906136691356892, -18.47705504352166]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52K
+Seed is 4458444
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52K
+Step mutate_pose_FR: FastRelax.pdb SH52K
+Seed is 4245172
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52K
+Step mutate_pose_FR: FastRelax.pdb SH52K
+Seed is 7116702
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52K
+Step mutate_pose_FR: FastRelax.pdb SH52K
+Seed is 3108401
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52K
+Step mutate_pose_FR: FastRelax.pdb SH52K
+Seed is 8479972
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52K
+SH52K [-424.0833431383909, -424.0833431383909, -423.45801472060043, -426.73612843117587, -424.0833431383909, -9.902869928219957, -9.902869928219957, -9.464978959453902, -12.555655221004486, -9.902869928219957]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52L
+Seed is 5232744
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52L
+Step mutate_pose_FR: FastRelax.pdb SH52L
+Seed is 4092893
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52L
+Step mutate_pose_FR: FastRelax.pdb SH52L
+Seed is 5772746
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52L
+Step mutate_pose_FR: FastRelax.pdb SH52L
+Seed is 7156384
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52L
+Step mutate_pose_FR: FastRelax.pdb SH52L
+Seed is 2974782
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52L
+SH52L [-398.47937330650643, -398.47937330650643, -398.47937330650643, -398.47937330650643, -398.47937330650643, -28.53307365729688, -28.533073657303817, -28.301167272171597, -28.543645670651813, -28.989673902794266]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52M
+Seed is 7702578
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52M
+Step mutate_pose_FR: FastRelax.pdb SH52M
+Seed is 9574237
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52M
+Step mutate_pose_FR: FastRelax.pdb SH52M
+Seed is 9593271
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52M
+Step mutate_pose_FR: FastRelax.pdb SH52M
+Seed is 8869238
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52M
+Step mutate_pose_FR: FastRelax.pdb SH52M
+Seed is 814315
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52M
+SH52M [-435.3402210805518, -435.3402210805518, -435.3402210805518, -435.3402210805518, -429.7895892121438, -21.683873699964295, -21.683873699964295, -21.683873699963954, -21.683873699963954, -14.752099590202874]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52N
+Seed is 1529603
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52N
+Step mutate_pose_FR: FastRelax.pdb SH52N
+Seed is 4961344
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52N
+Step mutate_pose_FR: FastRelax.pdb SH52N
+Seed is 9175347
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52N
+Step mutate_pose_FR: FastRelax.pdb SH52N
+Seed is 9740055
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52N
+Step mutate_pose_FR: FastRelax.pdb SH52N
+Seed is 1111406
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52N
+SH52N [-443.96115156861487, -443.96115156861487, -443.96115156861487, -443.96115156861487, -443.96115156861487, -26.14341721916969, -26.14341721916992, -26.14341721916969, -26.14341721916992, -26.14341721916992]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52Q
+Seed is 6875225
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Q
+Step mutate_pose_FR: FastRelax.pdb SH52Q
+Seed is 4145814
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Q
+Step mutate_pose_FR: FastRelax.pdb SH52Q
+Seed is 8443509
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Q
+Step mutate_pose_FR: FastRelax.pdb SH52Q
+Seed is 6296852
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Q
+Step mutate_pose_FR: FastRelax.pdb SH52Q
+Seed is 97319
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Q
+SH52Q [-434.96883228058556, -427.837043079486, -434.96883228058556, -434.96883228058556, -427.4048830117021, -21.343900842998096, -18.68048900608227, -21.24893304651448, -21.343900842998437, -19.07145433073066]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52R
+Seed is 4759623
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52R
+Step mutate_pose_FR: FastRelax.pdb SH52R
+Seed is 5284286
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52R
+Step mutate_pose_FR: FastRelax.pdb SH52R
+Seed is 2057731
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52R
+Step mutate_pose_FR: FastRelax.pdb SH52R
+Seed is 3444519
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52R
+Step mutate_pose_FR: FastRelax.pdb SH52R
+Seed is 6275205
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52R
+SH52R [-380.29155484174476, -380.29155484174476, -380.29155484174476, -377.05390673741283, -377.05390673741283, 32.944437755569766, 33.03940555205361, 33.03940555205361, 37.89190738415334, 37.89190738415334]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52S
+Seed is 720304
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52S
+Step mutate_pose_FR: FastRelax.pdb SH52S
+Seed is 8469751
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52S
+Step mutate_pose_FR: FastRelax.pdb SH52S
+Seed is 8578260
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52S
+Step mutate_pose_FR: FastRelax.pdb SH52S
+Seed is 3235390
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52S
+Step mutate_pose_FR: FastRelax.pdb SH52S
+Seed is 3075315
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52S
+SH52S [-451.559056347436, -451.559056347436, -451.559056347436, -451.559056347436, -451.559056347436, -29.603724843851296, -29.603724843851296, -30.337241763676275, -30.337241763675934, -29.603724843850955]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52T
+Seed is 2916470
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52T
+Step mutate_pose_FR: FastRelax.pdb SH52T
+Seed is 2652191
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52T
+Step mutate_pose_FR: FastRelax.pdb SH52T
+Seed is 5102123
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52T
+Step mutate_pose_FR: FastRelax.pdb SH52T
+Seed is 8749735
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52T
+Step mutate_pose_FR: FastRelax.pdb SH52T
+Seed is 1654484
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52T
+SH52T [-447.4758560432378, -447.4758560432378, -447.4758560432378, -447.4399184348759, -447.4758560432378, -30.257875979107325, -30.342271762242717, -31.383208659085994, -29.989260948116453, -31.383208659085994]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52Y
+Seed is 9806393
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Y
+Step mutate_pose_FR: FastRelax.pdb SH52Y
+Seed is 4321794
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Y
+Step mutate_pose_FR: FastRelax.pdb SH52Y
+Seed is 5937463
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Y
+Step mutate_pose_FR: FastRelax.pdb SH52Y
+Seed is 4999887
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Y
+Step mutate_pose_FR: FastRelax.pdb SH52Y
+Seed is 5954900
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52Y
+SH52Y [-351.43192525946847, -360.14191164431304, -360.14191164431304, -360.14191164431304, -360.14191164431304, 12.388977501005115, 2.9050376125882167, 0.5662592118569592, 3.6789911161682767, 0.5662592118569592]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52V
+Seed is 1520450
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52V
+Step mutate_pose_FR: FastRelax.pdb SH52V
+Seed is 6951008
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52V
+Step mutate_pose_FR: FastRelax.pdb SH52V
+Seed is 1196697
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52V
+Step mutate_pose_FR: FastRelax.pdb SH52V
+Seed is 2587664
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52V
+Step mutate_pose_FR: FastRelax.pdb SH52V
+Seed is 308690
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52V
+SH52V [-439.82083314793664, -439.82083314793664, -439.82083314793664, -439.82083314793664, -439.82083314793664, -27.70557048727835, -27.70557048727835, -27.73414743929868, -27.70557048727801, -27.70557048727801]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH52W
+Seed is 1871295
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52W
+Step mutate_pose_FR: FastRelax.pdb SH52W
+Seed is 3025565
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52W
+Step mutate_pose_FR: FastRelax.pdb SH52W
+Seed is 4532692
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52W
+Step mutate_pose_FR: FastRelax.pdb SH52W
+Seed is 2094109
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52W
+Step mutate_pose_FR: FastRelax.pdb SH52W
+Seed is 8144066
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH52W
+SH52W [-397.4387419337594, -397.49322374240955, -397.49322374240955, -397.4387419337594, -397.49322374240955, 3.6121348877329638, 3.799700052027106, 3.704732255542808, 3.6667256969834625, 3.7891280386787685]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33A
+Seed is 1398201
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb SH33A
+Seed is 3963954
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb SH33A
+Seed is 6152020
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb SH33A
+Seed is 8467949
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb SH33A
+Seed is 6189416
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33A
+SH33A [-454.29766857631415, -454.29766857631415, -454.29766857631415, -454.29766857631415, -454.29766857631415, -30.119122934163727, -30.214090730647342, -30.850229107154234, -30.119122934164864, -30.119122934163727]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33D
+Seed is 2384017
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb SH33D
+Seed is 1975556
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb SH33D
+Seed is 1933979
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb SH33D
+Seed is 9751424
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb SH33D
+Seed is 6496788
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33D
+SH33D [-441.34184754808626, -441.34184754808626, -441.34184754808626, -441.34184754808626, -441.34184754808626, -23.019937708658574, -23.75089458262829, -23.019937708658574, -23.01993770866244, -23.01993770866244]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33E
+Seed is 1264836
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb SH33E
+Seed is 7249263
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb SH33E
+Seed is 7915952
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb SH33E
+Seed is 6684668
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb SH33E
+Seed is 2767438
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33E
+SH33E [-435.73052119205624, -435.73052119205624, -435.73052119205624, -435.73052119205624, -435.73052119205624, -17.17661618098532, -24.28640914207267, -17.17661618098532, -17.17661618098782, -17.17661618098532]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33F
+Seed is 5856162
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb SH33F
+Seed is 145459
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb SH33F
+Seed is 8921016
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb SH33F
+Seed is 4918346
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb SH33F
+Seed is 8335327
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33F
+SH33F [-260.228915580093, -241.08959468845825, -260.228915580093, -260.228915580093, -260.228915580093, 87.09510245048841, 89.73202322865538, 87.0951024504825, 86.15407526158458, 87.00013465400389]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33G
+Seed is 6160963
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb SH33G
+Seed is 6400267
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb SH33G
+Seed is 6378853
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb SH33G
+Seed is 5373423
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb SH33G
+Seed is 3001659
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33G
+SH33G [-451.14841420424455, -451.14841420424455, -451.14841420424455, -451.14841420424455, -451.14841420424455, -29.710224054299772, -29.710224054298862, -29.710224054299772, -29.710224054298862, -29.710224054302046]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33H
+Seed is 9682913
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb SH33H
+Seed is 6070627
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb SH33H
+Seed is 5177270
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb SH33H
+Seed is 4243671
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb SH33H
+Seed is 9921029
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33H
+SH33H [-393.5343323865427, -393.5343323865427, -393.5343323865427, -393.5343323865427, -393.5343323865427, 13.237389000644555, 13.152993217508822, 13.247961013987094, 13.247961013988345, 13.247961013993688]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33I
+Seed is 8785667
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb SH33I
+Seed is 303629
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb SH33I
+Seed is 8297555
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb SH33I
+Seed is 9232006
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb SH33I
+Seed is 7373794
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33I
+SH33I [-218.2621476864705, -218.2621476864705, -218.2621476864705, -218.2621476864705, -218.2621476864705, -30.902554600326113, -31.62652721047627, -35.87518411294306, -30.91312661367411, -30.902554600324976]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33K
+Seed is 8439962
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb SH33K
+Seed is 8849803
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb SH33K
+Seed is 7214064
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb SH33K
+Seed is 2096735
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb SH33K
+Seed is 4426307
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33K
+SH33K [-82.55131945560177, -82.4788108655134, -82.4788108655134, -82.55131945560177, -82.55131945560177, 113.85443615578282, 102.16885399718649, 102.51636829715221, 101.71294839501172, 97.44569531455278]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33L
+Seed is 4531237
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb SH33L
+Seed is 5291215
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb SH33L
+Seed is 662939
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb SH33L
+Seed is 1843113
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb SH33L
+Seed is 5183968
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33L
+SH33L [-37.462266797394186, -37.462266797394186, -37.462266797394186, -37.462266797394186, -37.462266797394186, -26.562763442088958, -26.562763442088958, -26.56276344207434, -26.56276344207434, -31.489555027695154]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33M
+Seed is 5524268
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb SH33M
+Seed is 3817257
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb SH33M
+Seed is 5892009
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb SH33M
+Seed is 8111964
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb SH33M
+Seed is 6760375
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33M
+SH33M [-295.01288153163875, -295.1110463747011, -295.1110463747011, -295.1110463747011, -295.1110463747011, 3.6212559517057343, 4.2293769005784725, 4.229376900648276, 4.229376900610191, -1.6199216074945753]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33N
+Seed is 1040498
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb SH33N
+Seed is 8087050
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb SH33N
+Seed is 2011922
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb SH33N
+Seed is 8866308
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb SH33N
+Seed is 9209863
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33N
+SH33N [-423.77872974222385, -423.77872974222385, -423.77872974222385, -423.77872974222385, -423.77872974222385, -10.874539262462406, -10.87453926246343, -10.87453926246343, -10.87453926246343, -10.87453926246343]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33Q
+Seed is 176931
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb SH33Q
+Seed is 1483820
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb SH33Q
+Seed is 3685416
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb SH33Q
+Seed is 5351343
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb SH33Q
+Seed is 7338856
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Q
+SH33Q [-424.40777138379275, -424.40777138379275, -424.40777138379275, -424.40777138379275, -424.40777138379275, -9.612484684456263, -9.612484684456263, -9.61248468445865, -9.61248468445865, -9.612484684457513]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33R
+Seed is 2879862
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb SH33R
+Seed is 8015888
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb SH33R
+Seed is 3221451
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb SH33R
+Seed is 4882623
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb SH33R
+Seed is 5872206
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33R
+SH33R [180.2529245277669, 180.2529245277669, 180.2529245277669, 180.2529245277669, 212.43684521300878, 453.60185952557623, 454.367585952066, 454.367585952066, 449.5424048374138, 485.8189485100079]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33S
+Seed is 2602032
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33S
+Step mutate_pose_FR: FastRelax.pdb SH33S
+Seed is 2750163
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33S
+Step mutate_pose_FR: FastRelax.pdb SH33S
+Seed is 9737357
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33S
+Step mutate_pose_FR: FastRelax.pdb SH33S
+Seed is 6803466
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33S
+Step mutate_pose_FR: FastRelax.pdb SH33S
+Seed is 1735798
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33S
+SH33S [-451.4753400135205, -451.6115264648971, -451.6115264648971, -451.6115264648971, -451.6115264648971, -29.49181090635085, -29.62799735772677, -29.617425344378887, -30.354029275779283, -29.62799735772677]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33T
+Seed is 8817581
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb SH33T
+Seed is 5682499
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb SH33T
+Seed is 4789965
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb SH33T
+Seed is 8807857
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb SH33T
+Seed is 2231346
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33T
+SH33T [-371.2566456809428, -371.2566456809428, -371.2566456809428, -371.2566456809428, -371.2566456809428, -29.684456061858725, -29.684456061859976, -30.417108743567326, -29.684456061859976, -29.69502807520672]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33Y
+Seed is 5801590
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb SH33Y
+Seed is 4089174
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb SH33Y
+Seed is 2568907
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb SH33Y
+Seed is 5408548
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb SH33Y
+Seed is 2442783
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33Y
+SH33Y [-202.7338147609367, -202.7338147609367, -202.7338147609367, -202.7338147609367, -202.7338147609367, 143.74778219304793, 143.73721017969288, 143.74778219304076, 143.65281439655715, 143.74778219304167]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33V
+Seed is 3626265
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb SH33V
+Seed is 4140996
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb SH33V
+Seed is 76358
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb SH33V
+Seed is 1325790
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb SH33V
+Seed is 3158117
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33V
+SH33V [-296.5233257730781, -296.5233257730781, -296.5233257730781, -296.5233257730781, -296.5233257730781, -29.059047343190855, -28.320719676325893, -30.117492822871213, -33.17779278991907, -33.177792789943965]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb SH33W
+Seed is 7220395
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb SH33W
+Seed is 9923153
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb SH33W
+Seed is 5536566
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb SH33W
+Seed is 7968212
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb SH33W
+Seed is 3290191
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb SH33W
+SH33W [-253.73607199331138, -253.73607199331138, -253.73607199331138, -253.73607199331138, -253.73607199331138, 83.25858068250778, 84.30202395870782, 84.30202395870782, 84.30202395874511, 84.30202395871498]
+Results written to Rosetta_ddG_mut.csv (68 mutant rows)
+
+Double Mutations (Condition-based mode)
+----------------------------------------
+Filtered 4 single positions by condition: ddG_interface < 0
+Identified 4 mutual neighbor pairs
+1740 double mutation combinations generated
+1740 double mutations x 5 replicas = 8700 structures
+Debug mode: limited to first 72 double mutations
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33I
+Seed is 7387292
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33I
+Seed is 4921491
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33I
+Seed is 3832651
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33I
+Seed is 7444937
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33I
+Seed is 582514
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33I
+TH31G_SH33I [-218.58500669305346, -218.58500669305346, -218.58500669305346, -218.58500669305346, -218.58500669305346, -32.069622496866, -30.93542356774836, -30.93542356774944, -35.90805308036644, -35.908053080367296]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33A
+Seed is 7358790
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33A
+Seed is 8656242
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33A
+Seed is 2217019
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33A
+Seed is 5981912
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33A
+Seed is 3468963
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33A
+TH31G_SH33A [-454.62349730900206, -454.62349730900206, -454.62349730900206, -454.62349730900206, -454.62349730900206, -30.615611628728004, -30.15199190158711, -30.15199190158711, -30.15199190158711, -30.151991901588246]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33G
+Seed is 9553685
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33G
+Seed is 8953624
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33G
+Seed is 2569304
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33G
+Seed is 7270036
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33G
+Seed is 7433321
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33G
+TH31G_SH33G [-451.47424572329237, -451.47424572329237, -451.47424572329237, -451.47424572329237, -451.47424572329237, -29.743093021722245, -29.743093021723155, -29.743093021726224, -29.75366503507024, -29.74309302172543]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33T
+Seed is 1319431
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33T
+Seed is 5152254
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33T
+Seed is 8803741
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33T
+Seed is 7616141
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33T
+Seed is 1752971
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33T
+TH31G_SH33T [-371.582484678451, -371.582484678451, -371.4333423231011, -371.4333423231011, -371.582484678451, -29.717325029283472, -35.422607347302744, -29.56818267393254, -34.54081218655034, -29.72789704263033]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33V
+Seed is 9006504
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33V
+Seed is 9570166
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33V
+Seed is 3502177
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33V
+Seed is 4561825
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33V
+Seed is 4008807
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33V
+TH31G_SH33V [-296.8447514837894, -296.8447514837894, -296.8447514837894, -296.8447514837894, -296.8447514837894, -29.09191643432348, -28.35358864374939, -30.14904600955674, -30.14904600955674, -28.353588643737794]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33L
+Seed is 2812609
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33L
+Seed is 3108277
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33L
+Seed is 5744944
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33L
+Seed is 8812538
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33L
+Seed is 7702601
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33L
+TH31G_SH33L [-37.7818793963888, -37.7818793963888, -37.7818793963888, -37.7818793963888, -37.7818793963888, -26.59563240949775, -26.595632409512397, -26.595632409513506, -33.86720749570304, -31.522423995118537]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33D
+Seed is 1982976
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33D
+Seed is 3487773
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33D
+Seed is 7450330
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33D
+Seed is 6750876
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33D
+Seed is 3515626
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33D
+TH31G_SH33D [-441.67540076664426, -441.67540076664426, -441.67540076664426, -441.67540076664426, -441.67540076664426, -23.052806676081957, -23.063378689428703, -23.052806676081957, -23.052806676081957, -23.052806676081957]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33E
+Seed is 3585599
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33E
+Seed is 8057207
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33E
+Seed is 8591040
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33E
+Seed is 5789394
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33E
+Seed is 8172362
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33E
+TH31G_SH33E [-436.06285924809754, -436.06285924809754, -436.06285924809754, -436.06285924809754, -436.06285924809754, -17.204826945156356, -17.204826945153854, -17.940369157314308, -17.20482694515556, -17.204826945153854]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33N
+Seed is 2915463
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33N
+Seed is 3128845
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33N
+Seed is 6672218
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33N
+Seed is 5534626
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33N
+Seed is 3631416
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33N
+TH31G_SH33N [-424.1143652750885, -424.1143652750885, -424.1143652750885, -424.1143652750885, -424.1143652750885, -10.907408229886812, -11.638361926379446, -11.638361926379446, -11.638361926380583, -10.907408229885789]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33A
+Seed is 1801513
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33A
+Seed is 1734715
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33A
+Seed is 929624
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33A
+Seed is 3852127
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33A
+Seed is 656486
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33A
+TH31Y_SH33A [-364.39446869317214, -364.4860441978725, -364.4860441978725, -364.4860441978725, -364.39446869317214, -30.688020273641257, -30.048489669825983, -30.059061683173184, -30.048489669825983, -29.96748617847271]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33G
+Seed is 6426266
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33G
+Seed is 3168507
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33G
+Seed is 1708341
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33G
+Seed is 607325
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33G
+Seed is 2711366
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33G
+TH31Y_SH33G [-361.3368678239034, -361.3368678239034, -361.3368678239034, -361.3368678239034, -361.3368678239034, -29.63959078996453, -29.63959078996021, -29.639590789959186, -35.34659542431672, -29.639590789965325]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33T
+Seed is 8253670
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33T
+Seed is 2441258
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33T
+Seed is 7063537
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33T
+Seed is 5430041
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33T
+Seed is 8424682
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33T
+TH31Y_SH33T [-281.44504208345927, -281.44504208345927, -281.44504208345927, -281.44504208345927, -281.44504208345927, -34.58645231013921, -29.613822797519077, -34.58645231013716, -29.61382279752118, -29.613822797522374]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33V
+Seed is 3809630
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33V
+Seed is 6692602
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33V
+Seed is 9441152
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33V
+Seed is 5167237
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33V
+Seed is 6192369
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33V
+TH31Y_SH33V [-206.7063866561075, -206.7063866561075, -206.7063866561075, -206.7063866561075, -206.7063866561075, -28.250086411986643, -28.250086411986643, -28.988414014390543, -28.250086411975218, -28.25008641197323]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33L
+Seed is 3761160
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33L
+Seed is 1344499
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33L
+Seed is 2806385
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33L
+Seed is 7023529
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33L
+Seed is 1836630
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33L
+TH31Y_SH33L [52.35554417717456, 52.35554417717456, 52.35554417717456, 52.35554417717456, 52.35554417717456, -26.492130177738147, -26.492130177738147, -26.492130177750695, -26.49213017773701, -30.20615313032576]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33D
+Seed is 7050706
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33D
+Seed is 9595139
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33D
+Seed is 4156169
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33D
+Seed is 6198883
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33D
+Seed is 3913366
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33D
+TH31Y_SH33D [-351.5379769733839, -351.5379769733839, -351.5379769733839, -351.5379769733839, -351.5379769733839, -23.044272240803537, -22.94930444432424, -22.949304444319125, -28.65289076643802, -22.949304444322877]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33E
+Seed is 5366205
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33E
+Seed is 5463211
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33E
+Seed is 6420387
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33E
+Seed is 5920654
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33E
+Seed is 8523975
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33E
+TH31Y_SH33E [-345.9183629863307, -345.9183629863307, -345.9183629863307, -345.9183629863307, -345.9183629863307, -17.099588116919563, -17.09958811692195, -17.099588116919563, -17.11016013026756, -17.099588116919563]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33N
+Seed is 8317524
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33N
+Seed is 3286731
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33N
+Seed is 1500711
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33N
+Seed is 3884207
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33N
+Seed is 4127753
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33N
+TH31Y_SH33N [-333.9769109182614, -333.9769109182614, -333.9769109182614, -333.9769109182614, -333.9769109182614, -10.80390599812364, -10.803905998124776, -10.80390599812398, -10.814478011471977, -10.80390599812398]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33Q
+Seed is 3368672
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33Q
+Seed is 4487151
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33Q
+Seed is 7154070
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33Q
+Seed is 7615521
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33Q
+Seed is 7218878
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33Q
+TH31Y_SH33Q [-334.5818770486601, -334.5818770486601, -334.5818770486601, -334.5818770486601, -334.5818770486601, -9.548221003593767, -9.537648990243497, -9.537648990244634, -9.537648990243497, -9.537648990243497]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33G
+Seed is 4079235
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33G
+Seed is 2196461
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33G
+Seed is 3693993
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33G
+Seed is 9184326
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33G
+Seed is 6767838
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33G
+TH31E_SH33G [-449.4024382971269, -449.4024382971269, -449.4024382971269, -449.4024382971269, -449.4024382971269, -29.95102909026349, -29.95102909026747, -29.95102909026349, -29.951029090264626, -29.951029090263717]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33T
+Seed is 1129681
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33T
+Seed is 2883343
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33T
+Seed is 6700863
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33T
+Seed is 2348770
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33T
+Seed is 4076827
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33T
+TH31E_SH33T [-369.5106125566784, -369.5106125566784, -369.5106125566784, -369.5106125566784, -369.5106125566784, -30.030732425820645, -30.547867651580248, -29.93576462933794, -30.752813094151918, -34.89782212860763]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33V
+Seed is 2511642
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33V
+Seed is 3804033
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33V
+Seed is 7078186
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33V
+Seed is 8571425
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33V
+Seed is 3019479
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33V
+TH31E_SH33V [-294.7725566292961, -294.7725566292961, -294.7725566292961, -294.7725566292961, -294.7725566292961, -29.29898405405271, -28.560656387136135, -28.560656387147844, -28.560656387161146, -33.417729500754774]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33L
+Seed is 6589405
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33L
+Seed is 7385054
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33L
+Seed is 8245680
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33L
+Seed is 7946347
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33L
+Seed is 8293491
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33L
+TH31E_SH33L [-35.71002650171193, -35.71002650171193, -35.71002650171193, -35.71002650171193, -35.71002650171193, -26.803534784100336, -26.803534784098883, -35.293402338432934, -26.80353478410005, -27.599581905268764]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33D
+Seed is 7475650
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33D
+Seed is 507477
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33D
+Seed is 5787858
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33D
+Seed is 1712661
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33D
+Seed is 7618891
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33D
+TH31E_SH33D [-439.6035472796373, -439.6035472796373, -439.6035472796373, -439.6035472796373, -439.6035472796373, -23.2712797476334, -23.260707734284154, -23.26070773427881, -23.271279747628057, -23.26070773428563]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33E
+Seed is 6941954
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33E
+Seed is 8168005
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33E
+Seed is 1368492
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33E
+Seed is 8603688
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33E
+Seed is 9508057
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33E
+TH31E_SH33E [-433.990670505793, -433.990670505793, -433.990670505793, -433.990670505793, -433.990670505793, -17.41190112444872, -17.41190112444872, -17.422473137796715, -17.506868920929605, -18.147443212877874]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33N
+Seed is 4897464
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33N
+Seed is 5319029
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33N
+Seed is 1370015
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33N
+Seed is 55685
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33N
+Seed is 9254645
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33N
+TH31E_SH33N [-422.04248107220843, -422.04248107220843, -422.04248107220843, -422.04248107220843, -422.04248107220843, -11.125846539572251, -11.11527452622289, -11.846228098994118, -11.12584653957191, -11.115274526224255]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Q
+Seed is 712650
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Q
+Seed is 5263770
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Q
+Seed is 9590596
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Q
+Seed is 7992705
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Q
+Seed is 6633330
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Q
+TH31E_SH33Q [-422.65418519620226, -422.65418519620226, -422.65418519620226, -422.65418519620226, -422.65418519620226, -9.84996183386545, -9.8499618338642, -9.849961833866473, -9.84996183386454, -9.849961833866814]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33M
+Seed is 4932722
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33M
+Seed is 8759578
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33M
+Seed is 3746261
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33M
+Seed is 3926688
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33M
+Seed is 9001704
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33M
+TH31E_SH33M [-293.3633840980744, -293.3633840980744, -293.3633840980744, -293.26521925501225, -293.3633840980744, 3.995905867657484, 3.140081232692637, 3.289620075618018, 4.094070710681535, 3.985333854309488]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33T
+Seed is 7860028
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33T
+Seed is 7376708
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33T
+Seed is 627729
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33T
+Seed is 6323500
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33T
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33T
+Seed is 6148472
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33T
+TH31V_SH33T [-263.01251654663963, -262.86337419128995, -263.01251654663963, -263.01251654663963, -263.01251654663963, -29.864316002511202, -29.71517364716135, -29.864316002512396, -29.864316002507906, -30.596968684215426]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33V
+Seed is 9443443
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33V
+Seed is 1737369
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33V
+Seed is 5766600
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33V
+Seed is 7063566
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33V
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33V
+Seed is 6076248
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33V
+TH31V_SH33V [-188.27643344499063, -188.27643344499063, -188.27643344499063, -188.27643344499063, -188.27643344499063, -28.500579616953786, -28.500579616967258, -28.500579616961062, -28.500579616949352, -28.511151630326907]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33L
+Seed is 2691287
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33L
+Seed is 2748807
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33L
+Seed is 8648971
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33L
+Seed is 2215629
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33L
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33L
+Seed is 4051870
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33L
+TH31V_SH33L [70.78809216163015, 70.78809216163015, 70.78809216163015, 70.78809216163015, 70.78809216163015, -27.538670503896583, -26.742623382728084, -26.74262338274268, -32.46546208951244, -26.74262338272696]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33D
+Seed is 6645281
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33D
+Seed is 9600995
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33D
+Seed is 4495877
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33D
+Seed is 8230457
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33D
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33D
+Seed is 2745746
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33D
+TH31V_SH33D [-333.10518935963836, -333.10518935963836, -333.10518935963836, -333.10518935963836, -333.10518935963836, -23.930754523281337, -23.930754523281337, -23.199797649305253, -23.199797649305253, -23.94132653663388]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33E
+Seed is 1434368
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33E
+Seed is 7294994
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33E
+Seed is 6634239
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33E
+Seed is 5679187
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33E
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33E
+Seed is 7113818
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33E
+TH31V_SH33E [-327.53412839555585, -327.53412839555585, -327.53412839555585, -327.53412839555585, -327.53412839555585, -17.366181717107338, -17.366181717106883, -17.376753730452947, -18.101723805542747, -17.3767537304592]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33N
+Seed is 7390311
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33N
+Seed is 7061242
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33N
+Seed is 1827482
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33N
+Seed is 4323003
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33N
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33N
+Seed is 6816404
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33N
+TH31V_SH33N [-315.5444332763763, -315.5444332763763, -315.5444332763763, -315.5444332763763, -315.5444332763763, -11.78535277588179, -11.14936699959975, -11.054399203114997, -11.054399203114542, -11.785352775887361]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33Q
+Seed is 8935401
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33Q
+Seed is 8957200
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33Q
+Seed is 1582947
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33Q
+Seed is 5199049
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33Q
+Seed is 5257031
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33Q
+TH31V_SH33Q [-316.19881904862297, -316.19881904862297, -316.19881904862297, -316.19881904862297, -316.19881904862297, -9.896180392781389, -9.801212596302207, -9.801212596300957, -9.801212596302207, -9.80121259629891]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33M
+Seed is 3137978
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33M
+Seed is 1988517
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33M
+Seed is 7370300
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33M
+Seed is 5376815
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33M
+Seed is 3877899
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33M
+TH31V_SH33M [-186.93125870201737, -186.83309385895467, -186.83309385895467, -186.83309385895467, -186.93125870201737, 3.3324577561203625, 4.136908391128799, -0.8151325189841714, -1.426450514431309, -0.8183295655628626]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33H
+Seed is 4200351
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33H
+Seed is 9596646
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33H
+Seed is 7950180
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33H
+Seed is 2069525
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33H
+Seed is 6877227
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33H
+TH31V_SH33H [-285.28565874240246, -285.28565874240246, -285.28565874240246, -285.28565874240246, -285.28565874240246, 13.067554862855218, 13.067554862851921, 12.282702373593793, 12.9620150530302, 13.067554862856014]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Q
+Seed is 4220327
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Q
+Seed is 720477
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Q
+Seed is 8217326
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Q
+Seed is 8536210
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Q
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Q
+Seed is 9117533
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Q
+TH31G_SH33Q [-424.7263818680399, -424.7263818680399, -424.7263818680399, -424.7263818680399, -424.7263818680399, -9.653467826868336, -9.64289581352159, -9.64289581352034, -9.64289581352034, -9.64289581352159]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33M
+Seed is 3228187
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33M
+Seed is 5334023
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33M
+Seed is 4001528
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33M
+Seed is 9159991
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33M
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33M
+Seed is 303223
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33M
+TH31G_SH33M [-295.43555449975275, -295.3373896566901, -295.43555449975275, -295.43555449975275, -295.43555449975275, 4.2042164051566715, 3.3041301232278784, 4.2042164051566715, -0.6528567084229735, 3.205965280149144]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33H
+Seed is 3104273
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33H
+Seed is 396479
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33H
+Seed is 9909754
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33H
+Seed is 6932280
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33H
+Seed is 9814031
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33H
+TH31G_SH33H [-393.8480954718923, -393.8480954718923, -393.8480954718923, -393.8480954718923, -393.8480954718923, 12.429428077281216, 13.214280690273029, 13.214280690277121, 13.214280690273029, 13.214280690273029]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33W
+Seed is 5360113
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33W
+Seed is 2820744
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33W
+Seed is 7503350
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33W
+Seed is 6911314
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33W
+Seed is 140843
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33W
+TH31G_SH33W [-254.0317469760796, -254.0317469760796, -254.0317469760796, -254.0317469760796, -254.0317469760796, 84.27032602416023, 84.27032602412294, 84.27032602411577, 83.32185042067579, 84.27032602415306]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33F
+Seed is 5681097
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33F
+Seed is 8651250
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33F
+Seed is 8613956
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33F
+Seed is 4609669
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33F
+Seed is 953693
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33F
+TH31G_SH33F [-260.5358861496937, -260.5358861496937, -260.5358861496937, -260.5358861496937, -260.5358861496937, 87.059723272866, 87.04915125951084, 86.96475547637522, 87.05972327286383, 87.049151259518]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33K
+Seed is 733183
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33K
+Seed is 9391264
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33K
+Seed is 9946717
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33K
+Seed is 7342502
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33K
+Seed is 2973115
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33K
+TH31G_SH33K [-82.87467532440361, -82.87467532440361, -82.87467532440361, -82.80216673431552, -82.87467532440361, 97.7520920508922, 102.07109274873528, 102.41331415688245, 114.222885742834, 97.31490284633094]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Y
+Seed is 5188339
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Y
+Seed is 443655
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Y
+Seed is 5434576
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Y
+Seed is 7134850
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33Y
+Seed is 1942951
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33Y
+TH31G_SH33Y [-193.52275858583667, -203.04476627775935, -193.52275858583667, -193.52275858583667, -203.04476627775935, 140.26914722306776, 143.71240301541715, 141.19239366434488, 141.19239366433123, 143.7124030154251]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33R
+Seed is 7603228
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33R
+Seed is 5732295
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33R
+Seed is 2612081
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33R
+Seed is 9992972
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31G_SH33R
+Seed is 6447434
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31G
+Step mutate: FastRelax.pdb SH33R
+TH31G_SH33R [212.11101276013062, 212.11101276013062, 179.9271284671613, 179.9271284671613, 212.11101276013062, 485.7844068538916, 393.8553433441341, 449.50789969729226, 454.33308081194446, 486.5501334041039]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33I
+Seed is 2464359
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33I
+Seed is 4977280
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33I
+Seed is 6497940
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33I
+Seed is 3695266
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31Y_SH33I
+Seed is 8781511
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31Y
+Step mutate: FastRelax.pdb SH33I
+TH31Y_SH33I [-128.44757120075715, -128.44757120075715, -128.44757120075715, -128.44757120075715, -128.44757120075715, -32.070757085707456, -31.975789289220558, -30.831921335987005, -31.56818753747328, -30.831921335987005]
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  PyRosetta-4                                  │
+│               Created in JHU by Sergey Lyskov and PyRosetta Team              │
+│               (C) Copyright Rosetta Commons Member Institutions               │
+│                                                                               │
+│ NOTE: USE OF PyRosetta FOR COMMERCIAL PURPOSES REQUIRES PURCHASE OF A LICENSE │
+│          See LICENSE.PyRosetta.md or email license@uw.edu for details         │
+└───────────────────────────────────────────────────────────────────────────────┘
+PyRosetta-4 2026 [Rosetta PyRosetta4.conda.m1.cxx11thread.serialization.python310.Release 2026.06+release.1a56185c2592611dec4c9c75ddc9468cd2227c1f 2026-01-30T13:14:27] retrieved from: http://www.pyrosetta.org
+Step df_FastRelax: FastRelax.pdb
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33H
+Seed is 6068893
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33H
+Seed is 2054590
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33H
+Seed is 9681112
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33H
+Seed is 6460808
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33H
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33H
+Seed is 5452638
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33H
+TH31E_SH33H [-391.7754413175918, -391.7754413175918, -391.7754413175918, -391.7754413175918, -391.7754413175918, 13.00896864804298, 13.008968648036046, 13.008968648036046, 12.998396634693393, 13.008968648041616]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33W
+Seed is 4219791
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33W
+Seed is 8570351
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33W
+Seed is 3599755
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33W
+Seed is 42965
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33W
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33W
+Seed is 8775850
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33W
+TH31E_SH33W [-251.95906281611403, -248.96205819676803, -251.95906281611403, -251.95906281611403, -251.95906281611403, 84.05351732254115, 84.288381159376, 83.1050418427871, 84.0640893359336, 84.06408933592712]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33F
+Seed is 7288955
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33F
+Seed is 7642745
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33F
+Seed is 9955960
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33F
+Seed is 9784016
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33F
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33F
+Seed is 2811240
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33F
+TH31E_SH33F [-239.32392981178185, -258.463250703417, -258.463250703417, -258.463250703417, -258.463250703417, 89.48986255840799, 86.85294178024293, 86.85294178024293, 86.85294178023258, 86.7579739837501]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33K
+Seed is 4409439
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33K
+Seed is 1539889
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33K
+Seed is 2504276
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33K
+Seed is 3752481
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33K
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33K
+Seed is 5644454
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33K
+TH31E_SH33K [-80.72997009250798, -80.80247868259636, -80.72997009250798, -80.80247868259636, -80.80247868259636, 114.02639174942504, 96.81411473208323, 102.07774362797863, 102.20624815008352, 102.20624815010444]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Y
+Seed is 4103847
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Y
+Seed is 5803129
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Y
+Seed is 2125246
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Y
+Seed is 1248722
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Y
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33Y
+Seed is 4070441
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33Y
+TH31E_SH33Y [-200.97205324474533, -200.97205324474533, -197.97500760265103, -200.97205324474533, -200.97205324474533, 138.48370544381336, 143.5056215228013, 143.73068165994272, 143.50562152279426, 126.11015263787928]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33R
+Seed is 3304591
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33R
+Seed is 4376182
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33R
+Seed is 4050937
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33R
+Seed is 4909211
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33R
+Step mutate_pose_FR: FastRelax.pdb TH31E_SH33R
+Seed is 9435582
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31E
+Step mutate: FastRelax.pdb SH33R
+TH31E_SH33R [184.99582314210528, 181.99855090732626, 181.99855090732626, 214.18256074300888, 181.99855090732626, 345.2135895744468, 454.124754219269, 449.2995731046167, 481.51675123948917, 454.12475421926865]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33I
+Seed is 4057982
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33I
+Seed is 451969
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33I
+Seed is 7823331
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33I
+Seed is 1142450
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33I
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33I
+Seed is 6982693
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33I
+TH31V_SH33I [-110.01507355463355, -110.01507355463355, -110.01507355463355, -110.01507355463355, -110.01507355463355, -31.082414540979116, -31.082414540979116, -31.082414540973346, -31.082414540973346, -31.082414540979116]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33A
+Seed is 1035853
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33A
+Seed is 1603119
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33A
+Seed is 3496977
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33A
+Seed is 8185264
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33A
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33A
+Seed is 1842407
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33A
+TH31V_SH33A [-346.0533672328261, -346.0533672328261, -346.0533672328261, -345.96179172812606, -346.0533672328261, -30.30955488815954, -30.298982874815977, -30.298982874815977, -35.91114305571938, -30.29898287481268]
+Step FastRelax_replics: FastRelax.pdb
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33G
+Seed is 8985928
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33G
+Seed is 5491830
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33G
+Seed is 6889713
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33G
+Seed is 3433640
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33G
+Step mutate_pose_FR: FastRelax.pdb TH31V_SH33G
+Seed is 229061
+Step repack_and_minimize: FastRelax.pdb
+Step mutate: FastRelax.pdb TH31V
+Step mutate: FastRelax.pdb SH33G
+TH31V_SH33G [-342.90459914431625, -342.90459914431625, -342.90459914431625, -342.90459914431625, -342.90459914431625, -29.890083994950885, -29.890083994955205, -29.890083994946906, -29.89008399495009, -29.890083994955205]
+Condition-based DM evaluation complete: results saved
+FAILED
+
+=================================== FAILURES ===================================
+_______________________ test_double_mutations_7s7i_short _______________________
+
+    @pytest.mark.slow
+    def test_double_mutations_7s7i_short():
+        """Quick test for DM (Double Mutation) mode on 7S7I.pdb.
+    
+        Uses --debug to limit to 4 interface positions (~100-200 double mutations).
+        Runs both condition-based and CSV-based DM modes.
+    
+        Configuration: --debug --not_relax --cpu 8
+    
+        Duration: ~3-5 minutes
+        Outputs to tests/results/double_mut_short/
+        """
+        from residue_scanning.cli import main
+    
+        pdb_file = PDBS_DIR / "7S7I.pdb"
+    
+        if not pdb_file.exists():
+            pytest.skip(f"{pdb_file} not found")
+    
+        output_dir = RESULTS_DIR / "double_mut_short"
+        output_dir.mkdir(parents=True, exist_ok=True)
+    
+        original_cwd = os.getcwd()
+    
+        try:
+            # Sub-test 1: Condition-based DM mode (short)
+            print(f"\n{'='*60}")
+            print("Testing DM mode (condition-based SHORT) on 7S7I.pdb")
+            print(f"{'='*60}")
+    
+            output_dir_condition = output_dir / "condition_based"
+            output_dir_condition.mkdir(parents=True, exist_ok=True)
+    
+>           main(
+                argv=[
+                    "-f",
+                    str(pdb_file),
+                    "-r",
+                    "HL",
+                    "-l",
+                    "A",
+                    "-m",
+                    "DM",
+                    "--condition",
+                    "ddG_interface < 0",
+                    "--cpu",
+                    "8",
+                    "--not_relax",
+                    "--debug",
+                    "-o",
+                    str(output_dir_condition),
+                ]
+            )
+
+tests/test_comprehensive.py:391: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+residue_scanning/cli.py:555: in main
+    df_ddG_postprocessing(df_concat, pose, replics, postfix="_double")
+residue_scanning/core.py:489: in df_ddG_postprocessing
+    df2.loc[:, ["ddG_complex", "ddG_interface"]] = df2.apply(
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/frame.py:10401: in apply
+    return op.apply().__finalize__(self, method="apply")
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/apply.py:916: in apply
+    return self.apply_standard()
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/apply.py:1063: in apply_standard
+    results, res_index = self.apply_series_generator()
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/apply.py:1081: in apply_series_generator
+    results[i] = self.func(v, *self.args, **self.kwargs)
+residue_scanning/core.py:490: in <lambda>
+    lambda x: ddG_calculation(x, df2), axis=1
+residue_scanning/core.py:441: in ddG_calculation
+    wt_REU = df.loc[df["Name"] == wt_name, "REU_min"].iat[0]
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/indexing.py:2528: in __getitem__
+    return self.obj._get_value(*key, takeable=self._takeable)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Series([], Name: REU_min, dtype: float64), label = 0, takeable = True
+
+    def _get_value(self, label, takeable: bool = False):
+        """
+        Quickly retrieve single value at passed index label.
+    
+        Parameters
+        ----------
+        label : object
+        takeable : interpret the index as indexers, default False
+    
+        Returns
+        -------
+        scalar value
+        """
+        if takeable:
+>           return self._values[label]
+E           IndexError: index 0 is out of bounds for axis 0 with size 0
+
+../../micromamba/envs/rosetta_RS/lib/python3.10/site-packages/pandas/core/series.py:1246: IndexError
+------------------------------ Captured log call -------------------------------
+INFO     residue_scanning:cli.py:163 ============================================================
+INFO     residue_scanning:cli.py:164 Residue Scanning Pipeline
+INFO     residue_scanning:cli.py:165 ============================================================
+INFO     residue_scanning:cli.py:166 Input PDB:       /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/pdbs/7S7I.pdb
+INFO     residue_scanning:cli.py:167 Output dir:      /Users/lilpoundcake/claude/Residue_Scanning_Pyrosetta/tests/results/double_mut_short/condition_based
+INFO     residue_scanning:cli.py:168 Mode:            Double_Mut_Searching
+INFO     residue_scanning:cli.py:169 Receptor chains: HL
+INFO     residue_scanning:cli.py:170 Ligand chains:   A
+INFO     residue_scanning:cli.py:171 CPUs:            8
+INFO     residue_scanning:cli.py:172 Replicas:        5
+INFO     residue_scanning:cli.py:173 Radius:          8.0 A
+INFO     residue_scanning:cli.py:174 Scoring:         ref2015 (--not_relax)
+INFO     residue_scanning:cli.py:178 Debug mode:      ON
+INFO     residue_scanning:cli.py:182 DM condition:    ddG_interface < 0
+INFO     residue_scanning:cli.py:183 ============================================================
+INFO     residue_scanning:cli.py:194 Input structure:  466.16 REU
+INFO     residue_scanning:cli.py:246 
+INFO     residue_scanning:cli.py:247 FastRelax: clear_4.pdb has the smallest REU
+INFO     residue_scanning:cli.py:248   Original pose:  466.16 REU
+INFO     residue_scanning:cli.py:249   Relaxed pose:   -451.55 REU
+INFO     residue_scanning:cli.py:269 
+INFO     residue_scanning:cli.py:270 Residue Scanning
+INFO     residue_scanning:cli.py:271 ----------------------------------------
+DEBUG    residue_scanning:core.py:555 Chain map: {'A': [1, 1, 94], 'H': [2, 95, 213], 'L': [3, 214, 320]}
+INFO     residue_scanning:core.py:598 Interface positions detected: 20 (from 226 receptor residues, cutoff=8.0 A)
+INFO     residue_scanning:core.py:604 Positions: TH31, SH33, YH50, SH52, YH52A, RH53, RH55, TH56, YH58, WH95, YH97, GH98, GH100, SL28, SL30, SL31, YL32, YL91, GL92, FL96
+INFO     residue_scanning:core.py:605 Mutations to evaluate: 360 (20 positions x 18 amino acids)
+INFO     residue_scanning:cli.py:278 After Cys/Pro filter: 360 mutations x 5 replicas = 1800 structures
+INFO     residue_scanning:core.py:501 Results written to Rosetta_ddG_mut.csv (68 mutant rows)
+INFO     residue_scanning:cli.py:423 
+INFO     residue_scanning:cli.py:424 Double Mutations (Condition-based mode)
+INFO     residue_scanning:cli.py:425 ----------------------------------------
+INFO     residue_scanning:cli.py:434 Filtered 4 single positions by condition: ddG_interface < 0
+INFO     residue_scanning:cli.py:476 Identified 4 mutual neighbor pairs
+INFO     residue_scanning:cli.py:511 1740 double mutation combinations generated
+INFO     residue_scanning:cli.py:521 1740 double mutations x 5 replicas = 8700 structures
+INFO     residue_scanning:cli.py:530 Debug mode: limited to first 72 double mutations
+INFO     residue_scanning:cli.py:553 Condition-based DM evaluation complete: results saved
+=============================== warnings summary ===============================
+tests/test_comprehensive.py::test_double_mutations_7s7i_short
+tests/test_comprehensive.py::test_double_mutations_7s7i_short
+  /Users/lilpoundcake/micromamba/envs/rosetta_RS/lib/python3.10/site-packages/numpy/_core/fromnumeric.py:57: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+    return bound(*args, **kwds)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_comprehensive.py::test_double_mutations_7s7i_short - IndexE...
+================== 1 failed, 2 warnings in 333.20s (0:05:33) ===================

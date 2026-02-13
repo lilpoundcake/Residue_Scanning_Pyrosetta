@@ -438,7 +438,14 @@ def df_FastRelax(
 def ddG_calculation(x, df: pd.DataFrame):
     """Compute ΔΔG_complex and ΔΔG_interface for one mutant row."""
     wt_name = wildtyper(x.Name)
-    wt_REU = df.loc[df["Name"] == wt_name, "REU_min"].iat[0]
+    wt_match = df.loc[df["Name"] == wt_name, "REU_min"]
+
+    # Handle case where wildtype row might be missing or has NaN values
+    if wt_match.empty or pd.isna(wt_match.iat[0]):
+        logger.warning(f"Wildtype not found or unevaluated for {x.Name} (expected: {wt_name})")
+        return float("nan"), float("nan")
+
+    wt_REU = wt_match.iat[0]
     wt_dG = df.loc[df["Name"] == wt_name, "Min_dG_Interface"].iat[0]
     return x.REU_min - wt_REU, x.Min_dG_Interface - wt_dG
 
@@ -448,8 +455,12 @@ def df_ddG_postprocessing(
     pose,
     replics: int,
     postfix: str = "",
+    ambiguity_reports: list[str] | None = None,
 ) -> pd.DataFrame:
-    """Compute REU_min, Min_dG_Interface, ΔΔG values; move PDB files; write CSV."""
+    """Compute REU_min, Min_dG_Interface, ΔΔG values; move PDB files; write CSV.
+
+    If ambiguity_reports are provided, saves them to a separate report file.
+    """
     df1 = df_concatenated.copy()
     for col in df1.columns[1:]:
         df1[col] = pd.to_numeric(df1[col], errors="coerce")
@@ -482,9 +493,11 @@ def df_ddG_postprocessing(
         axis=1,
     )
 
-    df2.loc[:, ["ddG_complex", "ddG_interface"]] = df2.apply(
+    ddg_results = df2.apply(
         lambda x: ddG_calculation(x, df2), axis=1
-    ).to_list()
+    )
+    df2.loc[:, "ddG_complex"] = [x[0] for x in ddg_results]
+    df2.loc[:, "ddG_interface"] = [x[1] for x in ddg_results]
 
     df3 = (
         df2.query("Is_WT != True")
@@ -495,6 +508,30 @@ def df_ddG_postprocessing(
     csv_name = f"Rosetta_ddG_mut{postfix}.csv"
     df3.to_csv(csv_name, index=False)
     logger.info("Results written to %s (%d mutant rows)", csv_name, len(df3))
+
+    # Save ambiguity reports if any were detected
+    if ambiguity_reports:
+        report_name = f"CSV_AMBIGUITIES{postfix}.txt"
+        with open(report_name, "w") as f:
+            f.write("CSV PARSING AMBIGUITIES DETECTED AND RESOLVED\n")
+            f.write("=" * 80 + "\n\n")
+            f.write(f"Total ambiguities: {len(ambiguity_reports)}\n\n")
+            for i, report in enumerate(ambiguity_reports, 1):
+                f.write(f"{i}. {report}\n\n")
+            f.write("\nEXPLANATION:\n")
+            f.write("-" * 80 + "\n")
+            f.write(
+                "When a CSV entry has a single trailing character that is a valid amino acid\n"
+                "(e.g., 'GH100A'), it creates an ambiguity:\n\n"
+                "  - Mutation interpretation: G→A at position H100 (no insertion code)\n"
+                "  - Position spec interpretation: All 18 mutations at position H100A (with insertion code A)\n\n"
+                "The parser checks if both positions exist in the PDB:\n"
+                "  - If BOTH exist: generates mutations for BOTH interpretations\n"
+                "  - If only one exists: uses that interpretation\n"
+                "  - If neither exist: skips the entry\n\n"
+                "This ensures no mutations are missed due to ambiguous CSV format.\n"
+            )
+        logger.info("Ambiguity report written to %s", report_name)
 
     return df3
 
@@ -595,7 +632,7 @@ def prepare_custom_mut_df(
     ligand_chains: str,
     replics: int,
     debug: bool = False,
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, list[str]]:
     """Build a DataFrame of mutations from a user-supplied CSV file.
 
     The CSV should have a single column with entries in one of these formats::
@@ -607,9 +644,21 @@ def prepare_custom_mut_df(
 
     Trailing-character rules (characters after chain + number digits):
         0 chars  → position, generate 18 mutations
-        1 char that is a valid target AA → specific mutation
+        1 char that is a valid target AA → specific mutation (but see AMBIGUITY below)
         1 char NOT a valid target AA    → insertion code, generate 18 mutations
         2 chars  → first is insertion code, second is to_aa
+
+    AMBIGUITY HANDLING:
+        If a single trailing char is a valid AA (e.g., 'A' in 'GH100A'):
+        - Checks if BOTH interpretations exist in the PDB:
+            1. Mutation: G→A at position H100 (no insertion code)
+            2. Position spec: All 18 mutations at position H100A (insertion code)
+        - If both exist: generates BOTH sets and marks as ambiguous in report
+        - If only one exists: uses that interpretation
+        - Reports ambiguity detected and resolved
+
+    Returns:
+        tuple of (DataFrame, list of ambiguity messages)
 
     Validates that from_aa matches the actual residue in the pose.
     Automatically adds wildtype entries for ddG calculation.
@@ -638,6 +687,7 @@ def prepare_custom_mut_df(
 
     screen_mut: list[list] = []
     seen_wt: set[str] = set()
+    ambiguity_reports: list[str] = []
 
     for from_aa, chain, number, trailing in entries:
         number_int = int(number)
@@ -649,8 +699,58 @@ def prepare_custom_mut_df(
         elif len(trailing) == 1:
             ch = trailing[0]
             if ch.isupper() and ch in all_valid_aa:
-                insertion_code = ""
-                to_aas = [ch]
+                # AMBIGUOUS: could be mutation OR insertion code
+                # Check both interpretations
+                mutation_interpretation = _check_mutation_interpretation(
+                    pose, from_aa, chain, number_int, ch
+                )
+                insertion_code_interpretation = _check_insertion_code_interpretation(
+                    pose, from_aa, chain, number_int, ch
+                )
+
+                if mutation_interpretation and insertion_code_interpretation:
+                    # Both exist! Process both and report ambiguity
+                    ambiguity_msg = (
+                        f"AMBIGUITY DETECTED in '{from_aa}{chain}{number}{ch}': "
+                        f"Both mutation ({from_aa}→{ch} at {chain}{number}) and "
+                        f"position spec (all mutations at {chain}{number}{ch.upper()}) exist in PDB. "
+                        f"Processing BOTH interpretations."
+                    )
+                    print(f"ℹ️  {ambiguity_msg}")
+                    ambiguity_reports.append(ambiguity_msg)
+
+                    # Process as BOTH mutation AND position spec
+                    _process_mutation_entry(
+                        pose, from_aa, chain, number_int, "", [ch], replics, screen_mut, seen_wt
+                    )
+                    _process_mutation_entry(
+                        pose,
+                        from_aa,
+                        chain,
+                        number_int,
+                        ch.upper(),
+                        list(AA),
+                        replics,
+                        screen_mut,
+                        seen_wt,
+                    )
+                    continue
+
+                elif mutation_interpretation:
+                    # Only mutation interpretation valid
+                    insertion_code = ""
+                    to_aas = [ch]
+                elif insertion_code_interpretation:
+                    # Only insertion code interpretation valid
+                    insertion_code = ch
+                    to_aas = list(AA)
+                else:
+                    # Neither exists
+                    print(
+                        f"WARNING: neither interpretation of '{from_aa}{chain}{number}{ch}' "
+                        f"found in pose, skipping"
+                    )
+                    continue
             else:
                 insertion_code = ch
                 to_aas = list(AA)
@@ -664,49 +764,236 @@ def prepare_custom_mut_df(
             )
             continue
 
-        # --- validate position exists in pose ---
-        if insertion_code:
-            rosetta_resid = pose.pdb_info().pdb2pose(chain, number_int, insertion_code)
-        else:
-            rosetta_resid = pose.pdb_info().pdb2pose(chain, number_int)
-
-        if rosetta_resid == 0:
-            print(
-                f"WARNING: residue {chain}{number}{insertion_code} not found " f"in pose, skipping"
-            )
-            continue
-
-        # --- validate from_aa matches actual residue ---
-        actual_aa = pose.residue(rosetta_resid).name1()
-        if from_aa != actual_aa:
-            print(
-                f"WARNING: {from_aa}{chain}{number}{insertion_code} — "
-                f"expected {from_aa} but pose has {actual_aa}, skipping"
-            )
-            continue
-
-        # --- generate mutation rows ---
-        for to_aa in to_aas:
-            name = f"{from_aa}{chain}{number}{insertion_code}{to_aa}"
-            row = [name]
-            row.extend(["NaN"] * (replics * 2))
-            screen_mut.append(row)
-
-        # --- ensure wildtype entry exists for this position ---
-        wt_name = f"{from_aa}{chain}{number}{insertion_code}{from_aa}"
-        if wt_name not in seen_wt:
-            seen_wt.add(wt_name)
-            # only add if not already generated above
-            if from_aa not in to_aas:
-                wt_row = [wt_name]
-                wt_row.extend(["NaN"] * (replics * 2))
-                screen_mut.append(wt_row)
+        # Process normal (non-ambiguous) cases
+        _process_mutation_entry(
+            pose, from_aa, chain, number_int, insertion_code, to_aas, replics, screen_mut, seen_wt
+        )
 
     if debug:
         print(f"{len(screen_mut)} mutations generated from custom CSV")
+        if ambiguity_reports:
+            print(f"\n{len(ambiguity_reports)} ambiguities detected and resolved:")
+            for msg in ambiguity_reports:
+                print(f"  - {msg}")
 
     col_names = ["Name"]
     col_names += [f"Replica_{i+1}_Complex" for i in range(replics)]
     col_names += [f"Replica_{i+1}_dG" for i in range(replics)]
 
-    return pd.DataFrame(screen_mut, columns=col_names)
+    return pd.DataFrame(screen_mut, columns=col_names), ambiguity_reports
+
+
+def _check_mutation_interpretation(pose, from_aa: str, chain: str, number: int, to_aa: str) -> bool:
+    """Check if '{from_aa}{chain}{number}' exists (mutation interpretation)."""
+    try:
+        rosetta_resid = pose.pdb_info().pdb2pose(chain, number)
+        if rosetta_resid == 0:
+            return False
+        actual_aa = pose.residue(rosetta_resid).name1()
+        return actual_aa == from_aa
+    except Exception:
+        return False
+
+
+def _check_insertion_code_interpretation(
+    pose, from_aa: str, chain: str, number: int, insertion_code: str
+) -> bool:
+    """Check if '{chain}{number}{insertion_code}' exists (insertion code interpretation)."""
+    try:
+        rosetta_resid = pose.pdb_info().pdb2pose(chain, number, insertion_code)
+        if rosetta_resid == 0:
+            return False
+        actual_aa = pose.residue(rosetta_resid).name1()
+        return actual_aa == from_aa
+    except Exception:
+        return False
+
+
+def _process_mutation_entry(
+    pose,
+    from_aa: str,
+    chain: str,
+    number: int,
+    insertion_code: str,
+    to_aas: list[str],
+    replics: int,
+    screen_mut: list[list],
+    seen_wt: set[str],
+) -> None:
+    """Process a single mutation entry (helper function)."""
+    # --- validate position exists in pose ---
+    if insertion_code:
+        rosetta_resid = pose.pdb_info().pdb2pose(chain, number, insertion_code)
+    else:
+        rosetta_resid = pose.pdb_info().pdb2pose(chain, number)
+
+    if rosetta_resid == 0:
+        print(f"WARNING: residue {chain}{number}{insertion_code} not found " f"in pose, skipping")
+        return
+
+    # --- validate from_aa matches actual residue ---
+    actual_aa = pose.residue(rosetta_resid).name1()
+    if from_aa != actual_aa:
+        print(
+            f"WARNING: {from_aa}{chain}{number}{insertion_code} — "
+            f"expected {from_aa} but pose has {actual_aa}, skipping"
+        )
+        return
+
+    # --- generate mutation rows ---
+    for to_aa in to_aas:
+        name = f"{from_aa}{chain}{number}{insertion_code}{to_aa}"
+        row = [name]
+        row.extend(["NaN"] * (replics * 2))
+        screen_mut.append(row)
+
+    # --- ensure wildtype entry exists for this position ---
+    wt_name = f"{from_aa}{chain}{number}{insertion_code}{from_aa}"
+    if wt_name not in seen_wt:
+        seen_wt.add(wt_name)
+        # only add if not already generated above
+        if from_aa not in to_aas:
+            wt_row = [wt_name]
+            wt_row.extend(["NaN"] * (replics * 2))
+            screen_mut.append(wt_row)
+
+
+def _parse_dm_component(pose, part: str) -> tuple[str, str, int, str, list[str]] | None:
+    """Parse one side of a DM CSV entry (e.g., 'AH99' or 'AH99D').
+
+    Returns:
+        (from_aa, chain, number_int, insertion_code, to_aas) or None if parse fails.
+    """
+    import re
+
+    mutation_re = re.compile(r"^([A-Z])([A-Za-z])(\d+)(.*)$")
+    all_valid_aa = set("ACDEFGHIKLMNPQRSTVWY")
+
+    m = mutation_re.match(part)
+    if m is None:
+        print(f"WARNING: cannot parse DM component '{part}', skipping")
+        return None
+
+    from_aa, chain, number, trailing = m.groups()
+    number_int = int(number)
+
+    # --- parse trailing chars ---
+    if len(trailing) == 0:
+        insertion_code = ""
+        to_aas = list(AA)
+    elif len(trailing) == 1:
+        ch = trailing[0]
+        if ch.isupper() and ch in all_valid_aa:
+            # Ambiguous: check both interpretations
+            mutation_interpretation = _check_mutation_interpretation(
+                pose, from_aa, chain, number_int, ch
+            )
+            insertion_code_interpretation = _check_insertion_code_interpretation(
+                pose, from_aa, chain, number_int, ch
+            )
+
+            if mutation_interpretation and insertion_code_interpretation:
+                # Both exist: process mutation (specific) not position spec
+                insertion_code = ""
+                to_aas = [ch]
+            elif mutation_interpretation:
+                insertion_code = ""
+                to_aas = [ch]
+            elif insertion_code_interpretation:
+                insertion_code = ch
+                to_aas = list(AA)
+            else:
+                print(f"WARNING: neither interpretation of '{from_aa}{chain}{number}{ch}' found in pose, skipping")
+                return None
+        else:
+            insertion_code = ch
+            to_aas = list(AA)
+    elif len(trailing) == 2:
+        insertion_code = trailing[0]
+        to_aas = [trailing[1]]
+    else:
+        print(f"WARNING: cannot parse trailing '{trailing}' in {from_aa}{chain}{number}{trailing}, skipping")
+        return None
+
+    return (from_aa, chain, number_int, insertion_code, to_aas)
+
+
+def prepare_double_mut_df(
+    pose,
+    csv_path,
+    replics: int,
+    debug: bool = False,
+) -> pd.DataFrame:
+    """Build a DataFrame of double mutations from a user-supplied CSV file.
+
+    The CSV should have a single column with entries in one of these formats::
+
+        AH99_GL101         — position pair; generates all 18×18 combinations
+        AH99D_GL101H       — specific double mutation
+        AH99_GL101H        — mixed position and specific mutation
+        AH99D_GL101        — mixed specific and position
+
+    Returns:
+        DataFrame with same column format as `df_FastRelax` input (Name + replicas columns)
+    """
+    from pathlib import Path
+
+    csv_path = Path(csv_path)
+    lines = csv_path.read_text().strip().splitlines()
+
+    double_mut: list[list] = []
+    seen_wt: set[str] = set()
+
+    for i, line in enumerate(lines):
+        line = line.strip().strip(",")
+        if not line:
+            continue
+        if "_" not in line:
+            print(f"WARNING: DM entry at line {i + 1} has no underscore: '{line}', skipping")
+            continue
+
+        parts = line.split("_", 1)
+        if len(parts) != 2:
+            print(f"WARNING: cannot split DM entry '{line}' into two parts, skipping")
+            continue
+
+        # Parse both sides
+        result1 = _parse_dm_component(pose, parts[0])
+        result2 = _parse_dm_component(pose, parts[1])
+
+        if result1 is None or result2 is None:
+            continue
+
+        from_aa1, chain1, number1, ic1, to_aas1 = result1
+        from_aa2, chain2, number2, ic2, to_aas2 = result2
+
+        # Add wildtype pair FIRST so it's not filtered out by debug mode cutoff
+        wt_pair = (
+            f"{from_aa1}{chain1}{number1}{ic1}{from_aa1}_"
+            f"{from_aa2}{chain2}{number2}{ic2}{from_aa2}"
+        )
+        if wt_pair not in seen_wt:
+            seen_wt.add(wt_pair)
+            wt_row = [wt_pair]
+            wt_row.extend(["NaN"] * (replics * 2))
+            double_mut.append(wt_row)
+
+        # Generate all combinations
+        for to_aa1 in to_aas1:
+            for to_aa2 in to_aas2:
+                name = (
+                    f"{from_aa1}{chain1}{number1}{ic1}{to_aa1}_"
+                    f"{from_aa2}{chain2}{number2}{ic2}{to_aa2}"
+                )
+                row = [name]
+                row.extend(["NaN"] * (replics * 2))
+                double_mut.append(row)
+
+    if debug:
+        print(f"{len(double_mut)} double mutations generated from CSV")
+
+    col_names = ["Name"]
+    col_names += [f"Replica_{i+1}_Complex" for i in range(replics)]
+    col_names += [f"Replica_{i+1}_dG" for i in range(replics)]
+
+    return pd.DataFrame(double_mut, columns=col_names)
