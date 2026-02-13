@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# PyRosetta intermediate files
+for_pyrosetta.pdb
+clear.pdb
+all_REU_pdb*/
+min_REU_pdb*/
+FastRelax/
+
+# Test artefacts
+tests/results/
+
+# Environments
+.venv/
+*.egg-info

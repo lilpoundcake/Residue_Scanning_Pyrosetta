@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "residue-scanning"
+version = "0.2.1"
+description = "Protein-protein interface residue scanning and ΔΔG prediction using PyRosetta"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+# PyRosetta is only available from the RosettaCommons conda channel and
+# cannot be listed here. Install the full environment via env.yaml first.
+dependencies = [
+    "numpy>=1.20",
+    "pandas",
+    "scipy>=1.7",
+    "biopython>=1.85",
+    "blosc",          # required for efficient PyRosetta pose pickling in multiprocessing
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "build",
+    "ruff",
+    "flake8",
+    "mypy",
+    "black",
+]
+
+[project.scripts]
+residue-scan = "residue_scanning.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["residue_scanning*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501", "F405", "F403", "SIM108"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "residue_scanning.core"
+# pyrosetta uses star-imports and has no type stubs
+disable_error_code = ["name-defined", "no-any-return"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: end-to-end tests that run the full PyRosetta pipeline",
+]
