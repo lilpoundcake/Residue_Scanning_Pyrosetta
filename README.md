@@ -59,10 +59,12 @@ residue-scan --help
 
 Use this to install a specific released version without a source checkout.
 
+**From pre-built wheel (already in dist/):**
+
 ```bash
 micromamba activate rosetta_RS   # PyRosetta must already be present
 
-pip install residue_scanning-0.2.1-py3-none-any.whl
+pip install dist/residue_scanning-0.2.1-py3-none-any.whl
 ```
 
 **Build the wheel yourself from source:**
@@ -71,8 +73,15 @@ pip install residue_scanning-0.2.1-py3-none-any.whl
 micromamba activate rosetta_RS
 pip install build
 python -m build              # produces dist/residue_scanning-*.whl and .tar.gz
+pip install dist/residue_scanning-0.2.1-py3-none-any.whl
+
+# Or install directly after building
 pip install dist/*.whl
 ```
+
+**Available distributions:**
+- Wheel: `dist/residue_scanning-0.2.1-py3-none-any.whl` (17 KB, faster install)
+- Source: `dist/residue_scanning-0.2.1.tar.gz` (16 KB, build from source)
 
 ---
 

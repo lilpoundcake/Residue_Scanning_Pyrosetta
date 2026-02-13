@@ -65,8 +65,19 @@ black --check residue_scanning/ tests/
 ## Building a wheel
 
 ```bash
-python -m build    # produces dist/residue_scanning-*.whl
+# Build both wheel and source distribution
+python -m build    # produces dist/residue_scanning-0.2.1-py3-none-any.whl and dist/residue_scanning-0.2.1.tar.gz
+
+# Build wheel only
+python -m build --wheel
+
+# Install the wheel
+pip install dist/residue_scanning-0.2.1-py3-none-any.whl
 ```
+
+**Latest builds** (2026-02-13):
+- Wheel: `dist/residue_scanning-0.2.1-py3-none-any.whl` (17 KB) ✅
+- Source: `dist/residue_scanning-0.2.1.tar.gz` (16 KB) ✅
 
 ## Package architecture
 
