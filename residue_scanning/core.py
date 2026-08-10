@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from itertools import product
 from random import randint
 
 import numpy as np
@@ -641,6 +642,7 @@ def prepare_custom_mut_df(
         AH98D   — specific mutation (from=A, chain=H, number=98, to=D)
         AH98bD  — specific mutation with insertion code 'b'
         AH98b   — position with insertion code; generates all 18 mutations
+        AH98D_GL101H — multiple mutations separated by underscores
 
     Trailing-character rules (characters after chain + number digits):
         0 chars  → position, generate 18 mutations
@@ -690,6 +692,15 @@ def prepare_custom_mut_df(
     ambiguity_reports: list[str] = []
 
     for from_aa, chain, number, trailing in entries:
+        # The initial regular expression deliberately captures everything
+        # after the first residue number.  Split multi-mutation entries here
+        # instead of reporting the remaining components as invalid trailing
+        # characters (for example, ``WH108Y_SL32H``).
+        if "_" in trailing:
+            full_entry = f"{from_aa}{chain}{number}{trailing}"
+            _process_multi_mutation_entry(pose, full_entry, replics, screen_mut, seen_wt)
+            continue
+
         number_int = int(number)
 
         # --- parse trailing chars to get insertion_code + to_aa(s) ---
@@ -781,6 +792,69 @@ def prepare_custom_mut_df(
     col_names += [f"Replica_{i+1}_dG" for i in range(replics)]
 
     return pd.DataFrame(screen_mut, columns=col_names), ambiguity_reports
+
+
+def _process_multi_mutation_entry(
+    pose,
+    entry: str,
+    replics: int,
+    screen_mut: list[list],
+    seen_wt: set[str],
+) -> None:
+    """Add an underscore-separated mutation entry and its combined wild type."""
+    components = entry.split("_")
+    if len(components) < 2 or any(not component for component in components):
+        print(f"WARNING: cannot split multi-mutation entry '{entry}', skipping")
+        return
+
+    parsed = [_parse_dm_component(pose, component) for component in components]
+    if any(component is None for component in parsed):
+        return
+
+    specs = [component for component in parsed if component is not None]
+
+    # _parse_dm_component resolves the syntax. Validate every referenced pose
+    # residue as prepare_custom_mut_df does for a single mutation.
+    for from_aa, chain, number, insertion_code, _ in specs:
+        if insertion_code:
+            rosetta_resid = pose.pdb_info().pdb2pose(chain, number, insertion_code)
+        else:
+            rosetta_resid = pose.pdb_info().pdb2pose(chain, number)
+        if rosetta_resid == 0:
+            print(f"WARNING: residue {chain}{number}{insertion_code} not found in pose, skipping")
+            return
+        actual_aa = pose.residue(rosetta_resid).name1()
+        if actual_aa != from_aa:
+            print(
+                f"WARNING: {from_aa}{chain}{number}{insertion_code} — "
+                f"expected {from_aa} but pose has {actual_aa}, skipping"
+            )
+            return
+
+    wt_name = "_".join(
+        f"{from_aa}{chain}{number}{insertion_code}{from_aa}"
+        for from_aa, chain, number, insertion_code, _ in specs
+    )
+    names = []
+    for targets in product(*(to_aas for _, _, _, _, to_aas in specs)):
+        names.append(
+            "_".join(
+                f"{from_aa}{chain}{number}{insertion_code}{to_aa}"
+                for (from_aa, chain, number, insertion_code, _), to_aa in zip(specs, targets)
+            )
+        )
+
+    # Keep one combined wildtype row for ddG calculation, even when the
+    # requested target combinations do not include it.
+    if wt_name not in seen_wt:
+        seen_wt.add(wt_name)
+        if wt_name not in names:
+            names.append(wt_name)
+
+    for name in names:
+        row = [name]
+        row.extend(["NaN"] * (replics * 2))
+        screen_mut.append(row)
 
 
 def _check_mutation_interpretation(pose, from_aa: str, chain: str, number: int, to_aa: str) -> bool:

@@ -99,6 +99,13 @@ def _parse_args(argv=None) -> argparse.Namespace:
 def main(argv=None) -> None:
     args = _parse_args(argv)
 
+    # Resolve user-supplied input paths while we are still in the directory
+    # where the command was invoked.  The pipeline changes into output_dir
+    # below, so delaying this would incorrectly make relative CSV paths point
+    # inside the newly-created output directory.
+    input_file = Path(args.file).resolve()
+    mutations_csv = Path(args.mutations_csv).resolve() if args.mutations_csv else None
+
     # Import core first to get PYROSETTA_FLAGS, then init before any Rosetta objects.
     import pyrosetta  # noqa: PLC0415
 
@@ -126,7 +133,6 @@ def main(argv=None) -> None:
     # ------------------------------------------------------------------
     # Paths
     # ------------------------------------------------------------------
-    input_file = Path(args.file).resolve()
     if Path(args.output).is_absolute():
         output_dir = Path(args.output)
     else:
@@ -178,7 +184,7 @@ def main(argv=None) -> None:
     )
     logger.info("Debug mode:      %s", "ON" if args.debug else "OFF")
     if args.mutations_csv:
-        logger.info("Mutations CSV:   %s", Path(args.mutations_csv).resolve())
+        logger.info("Mutations CSV:   %s", mutations_csv)
     if args.mode in ("DM", "Double_Mut_Searching"):
         logger.info("DM condition:    %s", args.condition)
     logger.info("=" * 60)
@@ -320,7 +326,6 @@ def main(argv=None) -> None:
         logger.info("Custom Mutations")
         logger.info("-" * 40)
 
-        mutations_csv = Path(args.mutations_csv).resolve()
         df, ambiguity_reports = prepare_custom_mut_df(
             pose,
             mutations_csv,
@@ -381,7 +386,6 @@ def main(argv=None) -> None:
             logger.info("Double Mutations (CSV mode)")
             logger.info("-" * 40)
 
-            mutations_csv = Path(args.mutations_csv).resolve()
             df6 = prepare_double_mut_df(pose, mutations_csv, replics, debug)
 
             logger.info(
