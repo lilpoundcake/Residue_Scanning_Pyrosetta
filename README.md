@@ -117,6 +117,19 @@ poetry run residue-scan --help
 residue-scan -f complex.pdb -o results -r HL -l A -m RS --cpu 8
 ```
 
+All relative paths (`-f`, `--mutations_csv`, and `-o`) are resolved relative to
+the directory where the command is launched. Without `-o`, results are written
+to `./results` in that directory, even if the input PDB is in another folder.
+Absolute paths can also be used.
+
+For example, running `residue-scan -f data/complex.pdb -o results -r HL -l A -m RS --cpu 8`
+from `/work` reads `/work/data/complex.pdb` and writes to `/work/results`.
+
+**Compatibility note:** Previously, relative output paths (including the default
+`results`) were resolved next to the input PDB. To preserve that location, pass
+it explicitly, e.g. `-o data/results` for the example above. This change also
+applies to the legacy `rosetta_RS.py` script.
+
 ### Required arguments
 
 | Flag | Description |
@@ -140,7 +153,7 @@ residue-scan -f complex.pdb -o results -r HL -l A -m RS --cpu 8
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-o` / `--output` | `results` | Output directory |
+| `-o` / `--output` | `results` | Output directory, relative to the launch directory |
 | `--not_relax` | off | Skip FastRelax (uses PackRotamers; faster but less accurate) |
 | `--replics` | `5` | Max stochastic replicas per mutation |
 | `--radius` | `8.0` | Neighbor shell radius in Å for repacking |

@@ -25,7 +25,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("-f", "--file", 
                     required=True,
-                    help="Path to PDB file with complex")
+                    help="Path to PDB file with complex (relative to the launch directory)")
 
 parser.add_argument("-m", "--mode", 
                     required=True,
@@ -50,7 +50,7 @@ parser.add_argument("--cpu",
 parser.add_argument("-o", "--output",
                     required=False,
                     default='results',
-                    help='Path to output files. Default: folder "results" will be created')
+                    help='Path to output files, relative to the launch directory. Default: "results"')
 
 parser.add_argument("--not_relax",
                     required=False,
@@ -399,10 +399,7 @@ def df_ddG_postprocessing(df_concatenated, REPLICS=REPLICS, postfix=''):
 
 input_file = os.path.abspath(args.file)
 
-if not os.path.isabs(args.output):
-    output_folder = os.path.join(os.path.dirname(input_file), args.output)
-else:
-    output_folder = args.output
+output_folder = os.path.abspath(args.output)
 
 if not os.path.exists(output_folder): os.mkdir(output_folder)
 os.chdir(output_folder)

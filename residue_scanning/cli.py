@@ -20,7 +20,10 @@ def _parse_args(argv=None) -> argparse.Namespace:
         prog="residue-scan",
         description="Protein interface residue scanning using PyRosetta",
     )
-    p.add_argument("-f", "--file", required=True, help="Path to PDB file with complex")
+    p.add_argument(
+        "-f", "--file", required=True,
+        help="Path to PDB file with complex (relative to the launch directory)",
+    )
     p.add_argument(
         "-m",
         "--mode",
@@ -54,7 +57,7 @@ def _parse_args(argv=None) -> argparse.Namespace:
         "-o",
         "--output",
         default="results",
-        help="Output directory (default: 'results' next to the input file)",
+        help="Output directory, relative to the launch directory (default: 'results')",
     )
     p.add_argument(
         "--not_relax",
@@ -88,7 +91,8 @@ def _parse_args(argv=None) -> argparse.Namespace:
         type=str,
         default=None,
         help="Path to CSV with custom mutations (AH98D) or positions (AH98) for CM mode, "
-        "or position-pair entries (AH98_GL101) for DM mode.",
+        "or position-pair entries (AH98_GL101) for DM mode. "
+        "Relative paths are resolved from the launch directory.",
     )
     args = p.parse_args(argv)
     if args.mode in ("CM", "Custom_Mutations") and not args.mutations_csv:
@@ -96,15 +100,17 @@ def _parse_args(argv=None) -> argparse.Namespace:
     return args
 
 
-def main(argv=None) -> None:
-    args = _parse_args(argv)
-
-    # Resolve user-supplied input paths while we are still in the directory
-    # where the command was invoked.  The pipeline changes into output_dir
-    # below, so delaying this would incorrectly make relative CSV paths point
-    # inside the newly-created output directory.
+def _resolve_paths(args: argparse.Namespace) -> tuple[Path, Path | None, Path]:
+    """Resolve all CLI paths before the pipeline changes its working directory."""
     input_file = Path(args.file).resolve()
     mutations_csv = Path(args.mutations_csv).resolve() if args.mutations_csv else None
+    output_dir = Path(args.output).resolve()
+    return input_file, mutations_csv, output_dir
+
+
+def main(argv=None) -> None:
+    args = _parse_args(argv)
+    input_file, mutations_csv, output_dir = _resolve_paths(args)
 
     # Import core first to get PYROSETTA_FLAGS, then init before any Rosetta objects.
     import pyrosetta  # noqa: PLC0415
@@ -115,7 +121,6 @@ def main(argv=None) -> None:
         _worker_init,
         df_ddG_postprocessing,
         df_FastRelax,
-        FastRelax_replics,
         mutate_pose_FR,
         prepare_custom_mut_df,
         prepare_double_mut_df,
@@ -133,10 +138,6 @@ def main(argv=None) -> None:
     # ------------------------------------------------------------------
     # Paths
     # ------------------------------------------------------------------
-    if Path(args.output).is_absolute():
-        output_dir = Path(args.output)
-    else:
-        output_dir = input_file.parent / args.output
     output_dir.mkdir(parents=True, exist_ok=True)
     os.chdir(output_dir)
 
